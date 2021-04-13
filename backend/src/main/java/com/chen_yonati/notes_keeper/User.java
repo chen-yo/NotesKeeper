@@ -13,11 +13,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
+    @Column(unique = true, nullable = false)
     private String email;
     private String password;
     private String token;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_user_notes", referencedColumnName = "id")
     private Set<Note> notes;
 }

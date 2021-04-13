@@ -2,6 +2,7 @@ package com.chen_yonati.notes_keeper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.HashSet;
 import java.util.List;
@@ -45,6 +46,24 @@ public class AppService {
         user.setPassword(password);
         return true;
     }
+
+
+    public Iterable<User> listUsers() {
+       return userRepository.findAll();
+    }
+
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public Set<Note> getNotes(String email) {
+        return userRepository.findByEmail(email).getNotes();
+    }
+
+
+
+
+
 
 
 }
