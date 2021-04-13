@@ -10,7 +10,7 @@ public class NotesKeeperApplication {
 	public static void main(String[] args) {
 		ApplicationContext ctx = SpringApplication.run(NotesKeeperApplication.class, args);
 		AppService appService = ctx.getBean(AppService.class);
-//		appService.init();
+		appService.init();
 	}
 
 }

@@ -22,6 +22,7 @@ public class AppService {
         User user = new User();
         user.setName("Chen");
         user.setPassword("1234");
+        user.setEmail("c@c.com");
         Set<Note> notes = new HashSet<>();
 
         for (int i = 1; i <= NUM_USER_NOTES; i++) {
@@ -57,8 +58,13 @@ public class AppService {
     }
 
     public Set<Note> getNotes(String email) {
-        return userRepository.findByEmail(email).getNotes();
+        User u = userRepository.findByEmail(email);
+        if(u == null) throw new IllegalArgumentException("Email does not exist");
+        return u.getNotes();
     }
+
+
+
 
 
 

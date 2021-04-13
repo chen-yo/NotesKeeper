@@ -34,19 +34,47 @@ public class MainController {
         }
     }
 
-    @RequestMapping("/list")
+    @RequestMapping("/notes")
     @GetMapping()
-    public ResponseEntity<Set<Note>> getNotes(@RequestParam(name = "email") String email) {
+    public ResponseEntity<Set<Note>> getNotes(@RequestHeader(name = "email") String email) {
 
         try {
             Set<Note> notes = appService.getNotes(email);
             return new ResponseEntity<>(notes, HttpStatus.OK);
 
-        } catch (NoSuchElementException ex) {
+        } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
     }
+
+//    @RequestMapping("/notes")
+//    @PostMapping()
+//    public ResponseEntity<Set<Note>> addNote(@RequestBody Note note) {
+//
+//        try {
+//            Set<Note> notes = appService.getNotes(email);
+//            return new ResponseEntity<>(notes, HttpStatus.OK);
+//
+//        } catch (NoSuchElementException ex) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//
+//    }
+
+//    @RequestMapping("/notes")
+//    @PostMapping
+//    public ResponseEntity<Set<Note>> addNote(@RequestBody Note note) {
+//
+//        try {
+//            Set<Note> notes = appService.getNotes(email);
+//            return new ResponseEntity<>(notes, HttpStatus.OK);
+//
+//        } catch (NoSuchElementException ex) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//
+//    }
 
 
 //    @RequestMapping("/me")
