@@ -1,0 +1,3 @@
+rootProject.name = 'NotesKeeper'
+include 'frontend'
+include 'backend'
