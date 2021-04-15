@@ -71,6 +71,16 @@ public class AppService {
         Set<Note> userNotes = noteRepository.findAll().stream().filter(note -> note.getUser().getId().equals(u.getId())).collect(Collectors.toSet());
         return new HashSet<>(userNotes);
     }
+    public Note getNote(String email, Integer noteId) {
+        User u = userRepository.findByEmail(email);
+        if (u == null) throw new IllegalArgumentException("Email does not exist");
+        Optional<Note> note = noteRepository.findById(noteId);
+        if(note.isPresent()) {
+            return note.get();
+        }
+
+        throw new IllegalArgumentException("Unable to find note with id "+noteId);
+    }
 
     public Note addNote(String email, Note note) {
         User user = findUserByEmail(email);

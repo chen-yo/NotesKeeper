@@ -40,6 +40,20 @@ public class MainController {
 
     }
 
+    @RequestMapping("/notes/{id}")
+    @GetMapping()
+    public ResponseEntity<?> getNote(@RequestHeader(name = "email") String email, @PathVariable(name = "id") Integer noteId) {
+
+        try {
+            Note note = appService.getNote(email, noteId);
+            return new ResponseEntity<>(note, HttpStatus.OK);
+
+        } catch (Exception ex) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+    }
+
     @PostMapping("/notes")
     public ResponseEntity<?> addNote(@RequestHeader(name = "email") String email,
                                      @RequestBody Note note) {
@@ -53,12 +67,12 @@ public class MainController {
 
     }
 
-    @DeleteMapping("/notes")
+    @DeleteMapping("/notes/{id}")
     public ResponseEntity<?> deleteNote(@RequestHeader(name = "email") String email,
-                                        @RequestBody Note note) {
+                                        @PathVariable(name = "id") Integer noteId) {
 
         try {
-            appService.deleteNote(email, note.getId());
+            appService.deleteNote(email, noteId);
         } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
