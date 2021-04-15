@@ -16,40 +16,19 @@ public class MainController {
     @Autowired
     private AppService appService;
 
-    @RequestMapping("/login")
-    @PostMapping()
-    public ResponseEntity<User> login(String email, String password) {
-        try {
-            User user = appService.findUserByEmail(email);
-            if (user == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            if (!user.getPassword().equalsIgnoreCase(password)) {
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-            }
-            UUID token = UUID.randomUUID();
-            user.setToken(token.toString());
-            tokenToUser.put(token, user);
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        } catch (NoSuchElementException ex) {
-            return new ResponseEntity<User>(HttpStatus.UNAUTHORIZED);
+    @RequestMapping(value = "/user/login", method = RequestMethod.POST)
+    public ResponseEntity<?> authenticate(@RequestBody User user) {
+        User authUser = appService.authenticate(user.getEmail(), user.getPassword());
+        if (authUser != null) {
+            return ResponseEntity.ok(authUser);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
     }
 
     @RequestMapping("/notes")
     @GetMapping()
     public ResponseEntity<Set<Note>> getNotes(@RequestHeader(name = "email") String email) {
-
-        try {
-            Set<Note> notes = appService.getNotes(email);
-            return new ResponseEntity<>(notes, HttpStatus.OK);
-
-        } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<Set<Note>> test(@RequestHeader(name = "email") String email) {
 
         try {
             Set<Note> notes = appService.getNotes(email);
@@ -100,51 +79,4 @@ public class MainController {
         return new ResponseEntity<>(updated, HttpStatus.OK);
 
     }
-
-//    @RequestMapping("/notes")
-//    @PostMapping()
-//    public ResponseEntity<Set<Note>> addNote(@RequestBody Note note) {
-//
-//        try {
-//            Set<Note> notes = appService.getNotes(email);
-//            return new ResponseEntity<>(notes, HttpStatus.OK);
-//
-//        } catch (NoSuchElementException ex) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//
-//    }
-
-//    @RequestMapping("/notes")
-//    @PostMapping
-//    public ResponseEntity<Set<Note>> addNote(@RequestBody Note note) {
-//
-//        try {
-//            Set<Note> notes = appService.getNotes(email);
-//            return new ResponseEntity<>(notes, HttpStatus.OK);
-//
-//        } catch (NoSuchElementException ex) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//
-//    }
-
-
-//    @RequestMapping("/me")
-//    @PostMapping()
-//    public ResponseEntity<User> me(String token) {
-//        try {
-//            User user = tokenToUser.get(UUID.fromString(token));
-//            User user = appService.findUserByEmail(user.);
-//            if (!user.getPassword().equalsIgnoreCase(password)) {
-//                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//            }
-//            UUID token = UUID.randomUUID();
-//            user.setToken(token.toString());
-//            tokenToUser.put(token, user);
-//            return new ResponseEntity<>(user, HttpStatus.OK);
-//        } catch (NoSuchElementException ex) {
-//            return new ResponseEntity<User>(HttpStatus.UNAUTHORIZED);
-//        }
-//    }
 }

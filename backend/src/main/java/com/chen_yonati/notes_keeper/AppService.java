@@ -49,11 +49,9 @@ public class AppService {
         }
     }
 
-    public boolean authenticate(String email, String password) {
-        User user = new User();
-        user.setName(email);
-        user.setPassword(password);
-        return true;
+    public User authenticate(String email, String password) {
+        User user = userRepository.findByEmailAndPw(email, password);
+        return user;
     }
 
 
