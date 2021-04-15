@@ -1,6 +1,9 @@
 package com.chen_yonati.notes_keeper;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -21,7 +24,14 @@ public class Note {
     public String color;
     public String icon;
 
-    public Note(String title, String body, int priority, boolean read, String color, String icon) {
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    public User user;
+
+    public Note(User user, String title, String body, int priority, boolean read, String color, String icon) {
+        this.user = user;
         this.title = title;
         this.body = body;
         this.priority = priority;

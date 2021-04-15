@@ -18,7 +18,4 @@ public class User {
     private String password;
     private String token;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_user_notes", referencedColumnName = "id")
-    private Set<Note> notes;
 }
