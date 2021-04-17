@@ -1,6 +1,5 @@
 // pretend this is firebase, netlify, or auth0's code.
 // you shouldn't have to implement something like this in your own app
-
 const localStorageKey = '__auth_provider_token__'
 
 async function getToken() {
@@ -10,13 +9,14 @@ async function getToken() {
   return window.localStorage.getItem(localStorageKey)
 }
 
-function handleUserResponse({user}) {
-  window.localStorage.setItem(localStorageKey, user.token)
+function handleUserResponse(user) {
+  const {email} = user
+  window.localStorage.setItem(localStorageKey, email)
   return user
 }
 
-function login({username, password}) {
-  return client('login', {username, password}).then(handleUserResponse)
+function login({email, password}) {
+  return client('login', {email, password}).then(handleUserResponse)
 }
 
 function register({username, password}) {
@@ -29,7 +29,7 @@ async function logout() {
 
 // an auth provider wouldn't use your client, they'd have their own
 // so that's why we're not just re-using the client
-const authURL = ''
+const authURL = 'user'
 
 async function client(endpoint, data) {
   const config = {

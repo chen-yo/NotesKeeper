@@ -5,8 +5,11 @@ import {client} from './utils/api-client'
 import {useAsync} from './utils/hooks'
 import {AuthenticatedApp} from './authenticated-app'
 import {UnauthenticatedApp} from './unauthenticated-app'
+import {useAppContext} from './appdata'
 
 async function getUser() {
+
+  
   let user = null
 
   const token = await auth.getToken()
@@ -15,10 +18,13 @@ async function getUser() {
     user = data.user
   }
 
-  return user
+  return null;
+  
 }
 
 function App() {
+  const [state, dispatch] = useAppContext()
+
   const {
     data: user,
     error,
@@ -31,10 +37,10 @@ function App() {
   } = useAsync()
 
   React.useEffect(() => {
-    run(getUser())
-  }, [run])
+    run(getUser()).then(data=>dispatch({type: 'LOGIN', user: data})).catch()
+  }, [run, dispatch])
 
-  const login = form => auth.login(form).then(user => setData(user))
+  const login = form => auth.login(form).then(user => dispatch({type: 'LOGIN', user: user}))
   const register = form => auth.register(form).then(user => setData(user))
   const logout = () => {
     auth.logout()
@@ -55,7 +61,9 @@ function App() {
   }
 
   if (isSuccess) {
-    const props = {user, login, register, logout}
+    const {user} = state
+    console.log('isSucc', user)
+    const props = {login, register, logout}
     return user ? (
       <Router>
         <AuthenticatedApp {...props} />

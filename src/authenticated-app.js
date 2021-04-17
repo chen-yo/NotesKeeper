@@ -1,7 +1,9 @@
 import React from "react";
 import {Navbar, Nav} from 'react-bootstrap'
+import { useAppContext } from "./appdata";
 
-function AuthenticatedApp({user}) {
+function AuthenticatedApp() {
+  const [state, ] = useAppContext()
     return (
       <>
       <Navbar bg="dark" variant="dark">
@@ -11,7 +13,7 @@ function AuthenticatedApp({user}) {
           <Nav.Link href="#features">Features</Nav.Link>
           <Nav.Link href="#pricing">Pricing</Nav.Link>
         </Nav>
-        <span className="mr-sm-2 text-white">Hello <b>{user}</b></span>
+        <span className="mr-sm-2 text-white">Hello <b>{state.user.name}</b></span>
       </Navbar>
     </>
     );

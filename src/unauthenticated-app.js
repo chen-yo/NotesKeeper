@@ -1,55 +1,73 @@
-import * as React from 'react'
-import {Form} from 'react-bootstrap'
-import {Logo} from './components/logo'
-import {useAsync} from './utils/hooks'
+import * as React from "react";
+import { Button, Form, Modal } from "react-bootstrap";
+import { Logo } from "./components/logo";
+import { useAsync } from "./utils/hooks";
 
-function LoginForm({onSubmit, submitButton}) {
-  const {isLoading, isError, error, run} = useAsync()
+function LoginForm({ onSubmit, submitButton }) {
+  const { isLoading, isError, error, run } = useAsync();
   function handleSubmit(event) {
-    event.preventDefault()
-    const {username, password} = event.target.elements
+    event.preventDefault();
+    const {email, password} =  event.target.elements;
 
     run(
       onSubmit({
-        username: username.value,
+        email: email.value,
         password: password.value,
-      }),
-    )
+      })
+    );
+
+    
   }
 
   return (
-    <Form
-      onSubmit={handleSubmit}
-    >
+    <Form onSubmit={handleSubmit}>
       <Form.Group>
-        <Form.Label htmlFor="username">Username</Form.Label>
-        <Form.Control type="username" placeholder="Enter username" />
+        <Form.Label htmlFor="email">Email</Form.Label>
+        <Form.Control type="email" placeholder="Enter email" id="email" />
       </Form.Group>
       <Form.Group>
-      <Form.Label htmlFor="username">Password</Form.Label>
-        <Form.Control type="password" placeholder="Enter password" />
+        <Form.Label htmlFor="password">Password</Form.Label>
+        <Form.Control type="password" placeholder="Enter password" id="password"/>
       </Form.Group>
       <div>
         {React.cloneElement(
           submitButton,
-          {type: 'submit'},
+          { type: "submit" },
           ...(Array.isArray(submitButton.props.children)
             ? submitButton.props.children
             : [submitButton.props.children]),
-          isLoading ?<span>Loading</span> : null,
+          isLoading ? <span>Loading</span> : null
         )}
       </div>
-      {isError ?<span>Error occured</span> : null}
+      {isError ? <span>Error occured</span> : null}
     </Form>
-  )
+  );
 }
 
-function UnauthenticatedApp({login, register}) {
+function UnauthenticatedApp({ login, register }) {
+
   return (
     <div>
       <Logo width="80" height="80" />
       <h1>Notes Keeper</h1>
       <div>
+        <Modal.Dialog>
+          <Modal.Header>
+            <Modal.Title>Login</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <LoginForm
+              onSubmit={login}
+              submitButton={<Button variant="secondary">Login</Button>}
+            ></LoginForm>
+          </Modal.Body>
+
+          {/* <Modal.Footer>
+            <Button variant="secondary">Close</Button>
+            <Button variant="primary">Save changes</Button>
+          </Modal.Footer> */}
+        </Modal.Dialog>
+
         {/* <Modal>
           <ModalOpenButton>
             <Button variant="primary">Login</Button>
@@ -74,7 +92,7 @@ function UnauthenticatedApp({login, register}) {
         </Modal> */}
       </div>
     </div>
-  )
+  );
 }
 
-export {UnauthenticatedApp}
+export { UnauthenticatedApp };
