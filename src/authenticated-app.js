@@ -1,9 +1,17 @@
 import React from "react";
 import {Navbar, Nav} from 'react-bootstrap'
+import Switch from "react-bootstrap/esm/Switch";
 import { useAppContext } from "./appdata";
+import DisplayNotes from "./screens/DisplayNotes";
+import DisplayNote from "./screens/DisplayNote";
+import {Redirect, Route, useHistory} from 'react-router-dom'
+import AddNote from "./screens/AddNote";
+import { NotFoundScreen } from "./screens/NotFoundScreen";
 
 function AuthenticatedApp() {
   const [state, ] = useAppContext()
+
+
     return (
       <>
       <Navbar bg="dark" variant="dark">
@@ -15,8 +23,22 @@ function AuthenticatedApp() {
         </Nav>
         <span className="mr-sm-2 text-white">Hello <b>{state.user.name}</b></span>
       </Navbar>
+      <div>
+      <AppRoutes />
+      </div>
     </>
     );
+  }
+
+  function AppRoutes() {
+    return (
+      <Switch>
+        <Route path="/" exact component={DisplayNotes} />
+        <Route path="/notes/add" exact element={<AddNote  />} />
+        <Route path="/notes/:noteId" element={<DisplayNote />} />
+        <Route path="*" element={<NotFoundScreen />} />
+      </Switch>
+    )
   }
 
   export {AuthenticatedApp}
