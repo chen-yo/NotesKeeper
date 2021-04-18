@@ -33,7 +33,8 @@ function AuthenticatedApp() {
   function AppRoutes() {
     return (
       <Switch>
-        <Route path="/" exact component={DisplayNotes} />
+        <Redirect exact path="/" to="/notes"/>
+        <Route path="/notes" exact component={DisplayNotes} />
         <Route path="/notes/add" exact element={<AddNote  />} />
         <Route path="/notes/:noteId" element={<DisplayNote />} />
         <Route path="*" element={<NotFoundScreen />} />
