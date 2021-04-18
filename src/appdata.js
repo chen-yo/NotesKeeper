@@ -8,11 +8,11 @@ let initialState = {};
 function reducer(state, action) {
   switch (action.type) {
     case "LOGIN": {
-      return { ...state, user: action.user };
+      return { ...state, user: action.data };
     }
-  }
 
-  return state;
+    default: return state;
+  }
 }
 
 function AppContextProvier(props) {

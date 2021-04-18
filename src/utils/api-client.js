@@ -1,16 +1,17 @@
 // 🐨 get the queryCache from 'react-query'
 import * as auth from '../auth-provider'
 const apiURL = ''
+let token = ''
 
 async function client(
   endpoint,
-  {data, token, headers: customHeaders, ...customConfig} = {},
+  {data, headers: customHeaders, ...customConfig} = {},
 ) {
   const config = {
     method: data ? 'POST' : 'GET',
     body: data ? JSON.stringify(data) : undefined,
     headers: {
-      Authorization: token ? `Bearer ${token}` : undefined,
+      Email: token ? token : undefined,
       'Content-Type': data ? 'application/json' : undefined,
       ...customHeaders,
     },
@@ -34,4 +35,8 @@ async function client(
   })
 }
 
-export {client}
+function setUserToken(userToken) {
+  token = userToken
+}
+
+export {client, setUserToken}

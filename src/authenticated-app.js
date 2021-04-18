@@ -11,7 +11,6 @@ import { NotFoundScreen } from "./screens/NotFoundScreen";
 function AuthenticatedApp() {
   const [state, ] = useAppContext()
 
-
     return (
       <>
       <Navbar bg="dark" variant="dark">
