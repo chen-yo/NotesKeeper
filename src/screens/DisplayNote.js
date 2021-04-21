@@ -1,9 +1,37 @@
-import React from 'react'
+import {React, useState} from "react";
+import { Modal, Button } from "react-bootstrap";
+import {useHistory, useParams} from 'react-router-dom'
+import { useAppContext } from "../appdata";
 
-export default function DisplayNote() {
+export function DisplayNote() {
+
+    let { noteId } = useParams();
+    noteId = parseInt(noteId)
+    const history = useHistory()
+    const [state, dispatch] = useAppContext()
+
+    const {title} = state?.notes.find(note => note.id === noteId)
+
+    function handleClose() {
+        history.push('/notes')
+    }
+
     return (
-        <div>
-            <h1>Show this note</h1>
-        </div>
-    )
-}
+      <>
+        <Modal show={true} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>{title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleClose}>
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </>
+    );
+  }

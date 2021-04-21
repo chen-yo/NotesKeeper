@@ -11,6 +11,10 @@ function reducer(state, action) {
       return { ...state, user: action.data };
     }
 
+    case "LOAD_NOTES": {
+      return { ...state, notes: action.data };
+    }
+
     default: return state;
   }
 }

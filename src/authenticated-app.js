@@ -33,9 +33,9 @@ function AuthenticatedApp() {
     return (
       <Switch>
         <Redirect exact path="/" to="/notes"/>
-        <Route path="/notes" exact component={DisplayNotes} />
+        <Route path="/notes" component={DisplayNotes} />
         <Route path="/notes/add" exact element={<AddNote  />} />
-        <Route path="/notes/:noteId" element={<DisplayNote />} />
+        
         <Route path="*" element={<NotFoundScreen />} />
       </Switch>
     )

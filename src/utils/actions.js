@@ -6,3 +6,6 @@ export function login(dispatch, user) {
     return dispatch({ type: "LOGIN", data: user })
 }
 
+export function loadNotes(dispatch, notes) {
+    return dispatch({ type: "LOAD_NOTES", data: notes })
+}
