@@ -1,10 +1,36 @@
 import React from "react";
-import { Form, Container } from "react-bootstrap";
+import { Form, Container, Button } from "react-bootstrap";
+import { useAsync } from "../utils/hooks";
+import {client} from '../utils/api-client'
 
 export default function AddNote() {
+
+  const {isIdle, isLoading, isError, isSuccess, run} = useAsync()
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const {title, body, priority, read, color, icon} = e.target.elements
+
+    let form = {
+      title: title.value,
+      body: body.value,
+      priority: priority.value,
+      read: read.value === "on",
+      color: color.value,
+      icon: icon.value
+    }
+
+    console.log('Sending ', form)
+    run(addNotePromise(form))
+  }
+
+  function addNotePromise(note) {
+    return client('notes', {data: note} )
+  }
+
   return (
     <Container className="pt-5">
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <Form.Group controlId="title">
           <Form.Label>Title</Form.Label>
           <Form.Control type="text" placeholder="Do this..." />
@@ -46,6 +72,9 @@ export default function AddNote() {
             <option>Cool</option>
           </Form.Control>
         </Form.Group>
+        <Button variant="primary" type="submit" disabled={isLoading}>
+          {isLoading ? "Loading" : "Add"}
+        </Button>
       </Form>
     </Container>
   );
