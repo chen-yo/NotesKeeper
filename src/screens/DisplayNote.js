@@ -10,7 +10,7 @@ export function DisplayNote() {
     const history = useHistory()
     const [state, dispatch] = useAppContext()
 
-    const {title} = state?.notes.find(note => note.id === noteId)
+    const {title, body, priority, read, color, icon} = state?.notes.find(note => note.id === noteId)
 
     function handleClose() {
         history.push('/notes')
@@ -20,9 +20,13 @@ export function DisplayNote() {
       <>
         <Modal show={true} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>{title}</Modal.Title>
+            <Modal.Title>
+              Edit
+              </Modal.Title>
           </Modal.Header>
-          <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+          <Modal.Body>
+            
+            </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>
               Close

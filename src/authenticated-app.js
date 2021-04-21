@@ -4,9 +4,10 @@ import Switch from "react-bootstrap/esm/Switch";
 import { useAppContext } from "./appdata";
 import DisplayNotes from "./screens/DisplayNotes";
 import DisplayNote from "./screens/DisplayNote";
-import {Redirect, Route, useHistory} from 'react-router-dom'
+import {Redirect, Route, NavLink, Link} from 'react-router-dom'
 import AddNote from "./screens/AddNote";
 import { NotFoundScreen } from "./screens/NotFoundScreen";
+import { LinkContainer } from "react-router-bootstrap";
 
 function AuthenticatedApp() {
   const [state, ] = useAppContext()
@@ -16,7 +17,9 @@ function AuthenticatedApp() {
       <Navbar bg="dark" variant="dark">
         <Navbar.Brand href="#home">Navbar</Navbar.Brand>
         <Nav className="mr-auto">
-          <Nav.Link href="#home">Home</Nav.Link>
+          <LinkContainer to="/notes">
+            <Nav.Link>My Notes</Nav.Link>
+          </LinkContainer>
           <Nav.Link href="#features">Features</Nav.Link>
           <Nav.Link href="#pricing">Pricing</Nav.Link>
         </Nav>
