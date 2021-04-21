@@ -1,10 +1,9 @@
 import React from "react";
 import {Navbar, Nav} from 'react-bootstrap'
-import Switch from "react-bootstrap/esm/Switch";
 import { useAppContext } from "./appdata";
 import DisplayNotes from "./screens/DisplayNotes";
 import DisplayNote from "./screens/DisplayNote";
-import {Redirect, Route, NavLink, Link} from 'react-router-dom'
+import {Redirect, Route, NavLink, Link, Switch} from 'react-router-dom'
 import AddNote from "./screens/AddNote";
 import { NotFoundScreen } from "./screens/NotFoundScreen";
 import { LinkContainer } from "react-router-bootstrap";
@@ -36,10 +35,10 @@ function AuthenticatedApp() {
     return (
       <Switch>
         <Redirect exact path="/" to="/notes"/>
+        <Route path="/notes/add" exact component={AddNote} />
+        <Route path="/notes/:noteId" component={DisplayNote} />
         <Route path="/notes" component={DisplayNotes} />
-        <Route path="/notes/add" exact element={<AddNote  />} />
-        
-        <Route path="*" element={<NotFoundScreen />} />
+        <Route path="*" component={NotFoundScreen} />
       </Switch>
     )
   }

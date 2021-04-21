@@ -5,15 +5,18 @@ import React from "react";
 import { useAsync } from "../utils/hooks";
 import { client } from "../utils/api-client";
 import {Route, useHistory, useRouteMatch} from 'react-router-dom'
-import { DisplayNote } from "./DisplayNote";
 import * as actions from '../utils/actions'
 import { useAppContext } from "../appdata";
+import { Button } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 
 export default function DisplayNotes() {
   const { isLoading, isIdle, isSuccess, error, run, data: notes } = useAsync();
   const [state, dispatch] = useAppContext()
   let { path, url } = useRouteMatch();
   const history = useHistory()
+
+  console.log('DisplayNotes is loading')
 
   React.useEffect(() => {
     run(getNotes().then(data=>actions.loadNotes(dispatch, data)));
@@ -26,6 +29,11 @@ export default function DisplayNotes() {
   if (isSuccess) {
     return (
       <>
+      <div>
+        <LinkContainer to="/notes/add">
+          <Button variant="outline-primary">Add note</Button>
+        </LinkContainer>
+      </div>
         <div
           css={css`
             display: flex;
@@ -38,7 +46,7 @@ export default function DisplayNotes() {
             <Note {...note} onClick={() => history.push(`${url}/${note.id}`)} key={note.id}/>
           ))}
         </div>
-        <Route path="/notes/:noteId" component={DisplayNote} />
+        {/* <Route path={`${path}/:noteId`} exact component={DisplayNote} /> */}
       </>
     );
   }

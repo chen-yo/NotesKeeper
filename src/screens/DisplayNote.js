@@ -3,7 +3,7 @@ import { Modal, Button } from "react-bootstrap";
 import {useHistory, useParams} from 'react-router-dom'
 import { useAppContext } from "../appdata";
 
-export function DisplayNote() {
+export default function DisplayNote() {
 
     let { noteId } = useParams();
     noteId = parseInt(noteId)
@@ -21,7 +21,7 @@ export function DisplayNote() {
         <Modal show={true} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>
-              Edit
+              Edit {title}
               </Modal.Title>
           </Modal.Header>
           <Modal.Body>
