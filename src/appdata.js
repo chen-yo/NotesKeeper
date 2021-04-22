@@ -3,7 +3,7 @@ import React from "react";
 const AppContext = React.createContext();
 AppContext.displayName = "NotesAppContext";
 
-let initialState = {};
+let initialState = {user: null, notes: []};
 
 function reducer(state, action) {
   switch (action.type) {

@@ -11,8 +11,9 @@ import { Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
 export default function DisplayNotes() {
-  const { isLoading, isIdle, isSuccess, isError, error, run, data: notes } = useAsync();
+  const { isLoading, isIdle, isSuccess, isError, error, run } = useAsync();
   const [state, dispatch] = useAppContext();
+  const { notes } = state;
   let { path, url } = useRouteMatch();
   const history = useHistory();
 
@@ -23,49 +24,49 @@ export default function DisplayNotes() {
   }, [run, dispatch]);
 
   function deleteNote(noteId) {
-    run(client(`notes/${noteId}`, { method: "DELETE" }).then(() =>{
-
-      actions.deleteNote(dispatch, noteId)
-    }
-    ));
+    run(
+      client(`notes/${noteId}`, { method: "DELETE" }).then(() => {
+        actions.deleteNote(dispatch, noteId);
+      })
+    );
   }
 
-  if (isIdle || isLoading) {
+  if (isIdle) {
     return <span>Loading..</span>;
   }
 
-  if (isSuccess) {
-    return (
-      <>
-        <div>
-          <LinkContainer to="/notes/add">
-            <Button variant="outline-primary">Add note</Button>
-          </LinkContainer>
-        </div>
-        <div
-          css={css`
-            display: flex;
-            flex-wrap: wrap;
-            max-width: 50%;
-            margin: 0 auto;
-          `}
-        >
-          {state.notes?.map((note) => (
-            <Note
-              {...note}
-              onClick={() => history.push(`${url}/${note.id}`)}
-              key={note.id}
-              onDelete={deleteNote}
-            />
-          ))}
-        </div>
-        {/* <Route path={`${path}/:noteId`} exact component={DisplayNote} /> */}
-      </>
-    );
+  if (isError) {
+    return <span>An error occured</span>;
   }
-  if(isError) {
-    return <span>An error occured</span>
+
+  if (notes.length > 0) {
+   return <>
+      <div>
+        <LinkContainer to="/notes/add">
+          <Button variant="outline-primary">Add note</Button>
+        </LinkContainer>
+      </div>
+      <div
+        css={css`
+          display: flex;
+          flex-wrap: wrap;
+          max-width: 50%;
+          margin: 0 auto;
+        `}
+      >
+        {state?.notes?.map((note) => (
+          <Note
+            {...note}
+            onClick={() => history.push(`${url}/${note.id}`)}
+            key={note.id}
+            onDelete={deleteNote}
+          />
+        ))}
+      </div>
+    </>;
   }
+
+  return <span>No notes</span>
 }
 
 function getNotes() {
