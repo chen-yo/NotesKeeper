@@ -9,3 +9,7 @@ export function login(dispatch, user) {
 export function loadNotes(dispatch, notes) {
     return dispatch({ type: "LOAD_NOTES", data: notes })
 }
+
+export function deleteNote(dispatch, noteId) {
+    return dispatch({ type: "DELETE_NOTE", data: noteId })
+}

@@ -26,7 +26,11 @@ async function client(
       window.location.assign(window.location)
       return Promise.reject({message: 'Please re-authenticate.'})
     }
-    const data = await response.json()
+
+    let data = null
+    try {
+       data = await response.json()
+    }catch(Error){}
     if (response.ok) {
       return data
     } else {

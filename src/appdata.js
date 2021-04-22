@@ -15,6 +15,11 @@ function reducer(state, action) {
       return { ...state, notes: action.data };
     }
 
+    case "DELETE_NOTE": {
+      const noteId = action.data
+      return { ...state, notes: state.notes.filter(note=>note.id !== noteId) };
+    }
+
     default: return state;
   }
 }
