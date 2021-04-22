@@ -39,8 +39,8 @@ export default function DisplayNotes() {
     return <span>An error occured</span>;
   }
 
-  if (notes.length > 0) {
-   return <>
+  return (
+    <>
       <div>
         <LinkContainer to="/notes/add">
           <Button variant="outline-primary">Add note</Button>
@@ -54,7 +54,7 @@ export default function DisplayNotes() {
           margin: 0 auto;
         `}
       >
-        {state?.notes?.map((note) => (
+        {notes?.length > 0 && notes.map((note) => (
           <Note
             {...note}
             onClick={() => history.push(`${url}/${note.id}`)}
@@ -63,10 +63,12 @@ export default function DisplayNotes() {
           />
         ))}
       </div>
-    </>;
-  }
-
-  return <span>No notes</span>
+      {
+        notes.length === 0 && <div><span>No notes</span></div>
+      }
+     
+    </>
+  );
 }
 
 function getNotes() {
