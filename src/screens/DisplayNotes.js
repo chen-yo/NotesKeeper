@@ -1,6 +1,7 @@
 // this comment tells babel to convert jsx to calls to a function called jsx instead of React.createElement
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
+import styled from '@emotion/styled'
 import React from "react";
 import { useAsync } from "../utils/hooks";
 import { client } from "../utils/api-client";
@@ -75,16 +76,6 @@ function getNotes() {
   return client("notes");
 }
 
-const noteStyle = css`
-  border: 1px solid gray;
-  border-radius: 10px;
-  padding: 10px 10px 40px 10px;
-  margin: 10px;
-  cursor: pointer;
-  &:hover {
-    border: 1px solid blue;
-  }
-`;
 function Note({
   id,
   title,
@@ -101,7 +92,18 @@ function Note({
     onDelete(id);
   }
   return (
-    <div key={id} onClick={onClick} css={noteStyle}>
+    <div key={id} onClick={onClick} css={{
+      border: "1px solid gray",
+      borderRadius: "10px",
+      padding: "10px 10px 40px 10px",
+      margin: "10px",
+      cursor: "pointer",
+      ':hover': {
+        border: "1px solid blue"
+      },
+      backgroundColor: color
+  
+    }}>
       {title}
       <div>
         <button onClick={handleDelete}>X</button>
