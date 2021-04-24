@@ -2,6 +2,7 @@ import {React, useState} from "react";
 import { Modal, Button } from "react-bootstrap";
 import {useHistory, useParams} from 'react-router-dom'
 import { useAppContext } from "../appdata";
+import NoteForm from "./NoteForm";
 
 export default function DisplayNote() {
 
@@ -10,7 +11,7 @@ export default function DisplayNote() {
     const history = useHistory()
     const [state, dispatch] = useAppContext()
 
-    const {title, body, priority, read, color, icon} = state?.notes.find(note => note.id === noteId)
+    const note = state?.notes.find(note => note.id === noteId)
 
     function handleClose() {
         history.push('/notes')
@@ -21,11 +22,11 @@ export default function DisplayNote() {
         <Modal show={true} onHide={handleClose}>
           <Modal.Header closeButton>
             <Modal.Title>
-              Edit {title}
+              Edit {note.title}
               </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            
+            <NoteForm onSubmit={console.log} note={note}/>
             </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={handleClose}>

@@ -2,7 +2,6 @@ import React from "react";
 import {Navbar, Nav} from 'react-bootstrap'
 import { useAppContext } from "./appdata";
 import DisplayNotes from "./screens/DisplayNotes";
-import DisplayNote from "./screens/DisplayNote";
 import {Redirect, Route, NavLink, Link, Switch} from 'react-router-dom'
 import AddNote from "./screens/AddNote";
 import { NotFoundScreen } from "./screens/NotFoundScreen";
@@ -36,7 +35,6 @@ function AuthenticatedApp() {
       <Switch>
         <Redirect exact path="/" to="/notes"/>
         <Route path="/notes/add" exact component={AddNote} />
-        <Route path="/notes/:noteId" component={DisplayNote} />
         <Route path="/notes" component={DisplayNotes} />
         <Route path="*" component={NotFoundScreen} />
       </Switch>

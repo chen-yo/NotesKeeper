@@ -10,6 +10,9 @@ import * as actions from "../utils/actions";
 import { useAppContext } from "../appdata";
 import { Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import EditNote from "./EditNote";
+
+
 
 export default function DisplayNotes() {
   const { isLoading, isIdle, isSuccess, isError, error, run } = useAsync();
@@ -17,7 +20,7 @@ export default function DisplayNotes() {
   const { notes } = state;
   let { path, url } = useRouteMatch();
   const history = useHistory();
-
+  
   console.log("DisplayNotes is loading");
 
   React.useEffect(() => {
@@ -67,7 +70,7 @@ export default function DisplayNotes() {
       {
         notes.length === 0 && <div><span>No notes</span></div>
       }
-     
+      <Route path={`${path}/:noteId`} component={EditNote} />
     </>
   );
 }
