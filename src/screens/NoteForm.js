@@ -104,7 +104,7 @@ export default function NoteForm({onSubmit, note, isLoading}) {
               />
             </Form.Group>
             <Button variant="primary" type="submit" disabled={isLoading}>
-              {isLoading ? "Loading" : "Add"}
+              {isLoading ? "Loading" : note ? "Edit" : "Add"}
             </Button>
           </Form>
         )}

@@ -1,42 +1,62 @@
-import {React, useState} from "react";
+import { React, useEffect, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
-import {useHistory, useParams} from 'react-router-dom'
+import { useHistory, useParams } from "react-router-dom";
 import { useAppContext } from "../appdata";
+import { client } from "../utils/api-client";
+import { useAsync } from "../utils/hooks";
 import NoteForm from "./NoteForm";
+import * as actions from '../utils/actions'
+import {updateNote} from '../utils/note-context'
 
-export default function DisplayNote() {
+export default function EditNote() {
+  const { run, isLoading, data: note, isSuccess, isError } = useAsync();
+  let { noteId } = useParams();
+  noteId = parseInt(noteId);
+  const history = useHistory();
+  const [, dispatch] = useAppContext();
 
-    let { noteId } = useParams();
-    noteId = parseInt(noteId)
-    const history = useHistory()
-    const [state, dispatch] = useAppContext()
 
-    const note = state?.notes.find(note => note.id === noteId)
+  function handleClose() {
+    history.push("/notes");
+  }
 
-    function handleClose() {
-        history.push('/notes')
-    }
+  useEffect(() => {
+    const getNote = (noteId) => {
+      return client(`notes/${noteId}`);
+    };
 
-    return (
-      <>
+    run(getNote(noteId));
+  }, [noteId, run]);
+
+  function handleEdit(modifiedNote) {
+    // run(updateNote(modifiedNote)).then((n=>actions.updateNote(dispatch, n)).then(()=>history.push('/notes'))
+    updateNote(dispatch, modifiedNote).then(()=>history.push("/notes"))
+  }
+
+  return (
+    <>
+      {isSuccess && (
         <Modal show={true} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>
-              Edit {note.title}
-              </Modal.Title>
+            <Modal.Title>Edit {note.title}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <NoteForm onSubmit={console.log} note={note}/>
-            </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Close
-            </Button>
-            <Button variant="primary" onClick={handleClose}>
-              Save Changes
-            </Button>
-          </Modal.Footer>
+            <NoteForm onSubmit={handleEdit} note={note} />
+          </Modal.Body>
         </Modal>
-      </>
-    );
-  }
+      )}
+      {isLoading && (
+        <Modal show={true}>
+          <Modal.Body>
+            <span>Loading...</span>
+          </Modal.Body>
+        </Modal>
+      )}
+      {
+        isError && 
+      <span>Faild to load note with id: {noteId}</span>
+
+      }
+    </>
+  );
+}

@@ -20,6 +20,14 @@ function reducer(state, action) {
       return { ...state, notes: state.notes.filter(note=>note.id !== noteId) };
     }
 
+    case 'UPDATE_NOTE': {
+      let updatedNote = action.data
+      let notes = [...state.notes]
+      let index = notes.findIndex(oldNote=>oldNote.id === updatedNote.id)
+      notes[index] = {...notes[index], ...updatedNote}
+      return {...state, notes}
+    }
+
     default: return state;
   }
 }

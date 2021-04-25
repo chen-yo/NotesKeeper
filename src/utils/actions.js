@@ -1,4 +1,4 @@
-import { setUserToken} from './api-client'
+import { setUserToken, client} from './api-client'
 
 export function login(dispatch, user) {
     const {email} = user
@@ -13,3 +13,8 @@ export function loadNotes(dispatch, notes) {
 export function deleteNote(dispatch, noteId) {
     return dispatch({ type: "DELETE_NOTE", data: noteId })
 }
+
+export function updateNote(dispatch, note) {
+    client('notes')
+    dispatch({type: 'UPDATE_NOTE', data: note})
+  }
