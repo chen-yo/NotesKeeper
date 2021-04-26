@@ -1,12 +1,12 @@
 import { React, useEffect, useState } from "react";
 import { Modal, Button } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
-import { useAppContext } from "../appdata";
+import { useAppContext } from "../context/app-context";
 import { client } from "../utils/api-client";
 import { useAsync } from "../utils/hooks";
 import NoteForm from "./NoteForm";
 import * as actions from '../utils/actions'
-import {updateNote} from '../utils/note-context'
+import {updateNote} from '../context/note-context'
 
 export default function EditNote() {
   const { run, isLoading, data: note, isSuccess, isError } = useAsync();

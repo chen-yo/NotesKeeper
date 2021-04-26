@@ -1,14 +1,17 @@
 import React from "react";
 import {Navbar, Nav} from 'react-bootstrap'
-import { useAppContext } from "./appdata";
 import DisplayNotes from "./screens/DisplayNotes";
 import {Redirect, Route, NavLink, Link, Switch} from 'react-router-dom'
 import AddNote from "./screens/AddNote";
 import { NotFoundScreen } from "./screens/NotFoundScreen";
 import { LinkContainer } from "react-router-bootstrap";
+import { useSelector } from "react-redux";
+
+
 
 function AuthenticatedApp() {
-  const [state, ] = useAppContext()
+  const user = useSelector(state => state.auth.user)
+  const {name} = user
 
     return (
       <>
@@ -21,7 +24,7 @@ function AuthenticatedApp() {
           <Nav.Link href="#features">Features</Nav.Link>
           <Nav.Link href="#pricing">Pricing</Nav.Link>
         </Nav>
-        <span className="mr-sm-2 text-white">Hello <b>{state.user.name}</b></span>
+        <span className="mr-sm-2 text-white">Hello <b>{name}</b></span>
       </Navbar>
       <div>
       <AppRoutes />

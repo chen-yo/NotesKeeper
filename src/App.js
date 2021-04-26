@@ -5,8 +5,9 @@ import { client } from './utils/api-client'
 import { useAsync } from "./utils/hooks";
 import { AuthenticatedApp } from "./authenticated-app";
 import { UnauthenticatedApp } from "./unauthenticated-app";
-import { useAppContext } from "./appdata";
 import {login as userLogin} from './utils/actions'
+import { useDispatch, useSelector } from "react-redux";
+import {authActions} from './store/auth'
 
 async function getUser() {
   const token = await auth.getToken();
@@ -20,7 +21,10 @@ async function getUser() {
 }
 
 function App() {
-  const [state, dispatch] = useAppContext();
+
+  const auth = useSelector((state) => state.auth)
+  const dispatch = useDispatch()
+  
 
   const {
     error,
@@ -33,7 +37,7 @@ function App() {
   } = useAsync();
 
   React.useEffect(() => {
-    run(getUser().then(user => user && userLogin(dispatch, user)))
+    run(getUser().then(user => user && dispatch(authActions.setLogin(user))))
   }, [run, dispatch]);
 
   const login = (form) =>
@@ -52,13 +56,13 @@ function App() {
     return (
       <div>
         <p>Uh oh... There's a problem. Try refreshing the app.</p>
-        <pre>{error.message}</pre>
+        <pre>{error?.message}</pre>
       </div>
     );
   }
 
   if (isSuccess) {
-    const {user } = state
+    const {user } = auth
     const props = { login, register, logout };
     return user ? (
       <Router>

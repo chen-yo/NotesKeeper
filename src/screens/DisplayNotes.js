@@ -7,24 +7,25 @@ import { useAsync } from "../utils/hooks";
 import { client } from "../utils/api-client";
 import { Route, useHistory, useRouteMatch } from "react-router-dom";
 import * as actions from "../utils/actions";
-import { useAppContext } from "../appdata";
+import { useAppContext } from "../context/app-context";
 import { Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import EditNote from "./EditNote";
-
+import { useDispatch } from "react-redux";
+import {notesActions} from '../store/notes'
+import { useSelector } from "react-redux";
 
 
 export default function DisplayNotes() {
   const { isLoading, isIdle, isSuccess, isError, error, run } = useAsync();
-  const [state, dispatch] = useAppContext();
-  const { notes } = state;
+  const dispatch = useDispatch()
+  const { notes } =  useSelector(state=>state.notes);
   let { path, url } = useRouteMatch();
   const history = useHistory();
   
-  console.log("DisplayNotes is loading");
 
   React.useEffect(() => {
-    run(getNotes().then((data) => actions.loadNotes(dispatch, data)));
+    run(getNotes().then((data) => dispatch(notesActions.setNotes(data))));
   }, [run, dispatch]);
 
   function deleteNote(noteId) {
