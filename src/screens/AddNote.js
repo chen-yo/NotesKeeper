@@ -1,18 +1,23 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import NoteForm from "./NoteForm";
-import { client } from "../utils/api-client";
-import { useAsync } from "../utils/hooks";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import {addNote} from '../store/notes-actions'
 
 export default function AddForm() {
-  const { run, isLoading } = useAsync();
+  // const { run, isLoading } = useAsync();
 
-  function addNotePromise(note) {
-    return client("notes", { data: note });
-  }
+  const {loading} = useSelector(state=>state.notes)
+  const dispatch = useDispatch()
+  const [addedNote, setAddedNote] = useState(null)
 
   function onSubmit(note) {
-    console.log("Sending", note);
-    run(addNotePromise(note));
+    setAddedNote(note)
   }
-  return <NoteForm onSubmit={onSubmit} isLoading={isLoading} />;
+
+  useEffect(() => {
+    dispatch(addNote(addedNote))
+  }, [addedNote, dispatch])
+
+  return <NoteForm onSubmit={onSubmit} isLoading={loading} />;
 }

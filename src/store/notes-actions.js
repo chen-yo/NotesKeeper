@@ -14,3 +14,18 @@ export function getNotes() {
     }
   };
 }
+
+export function addNote(note) {
+  return async dispatch => {
+    dispatch(notesActions.setLoading(true))
+    try{
+      const added = await client("notes", { data: note });
+      dispatch(getNotes())
+      dispatch(notesActions.setLoading(false))
+    }catch(error) {
+
+    }finally {
+      dispatch(notesActions.setLoading(false))
+    }
+  }
+}
