@@ -5,14 +5,18 @@ function updateNote(note) {
 }
 
 function loadNotes() {
-    return client("notes");
-  }
-
-function hhhh(){}
-
-let service = {
-    updateNote,
-    loadNotes
+  return client("notes");
 }
 
-export default service
+function userLogin(dispatch, user) {
+
+}
+
+function hhhh() {}
+
+let service = {
+  updateNote,
+  loadNotes,
+};
+
+export default service;
