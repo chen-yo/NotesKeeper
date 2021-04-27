@@ -1,5 +1,6 @@
 import { client } from "../utils/api-client";
 import { notesActions } from "./notes";
+import { errorsActions } from "./errors";
 
 export function getNotes() {
   return async (dispatch) => {
@@ -8,7 +9,7 @@ export function getNotes() {
       const notes = await client("notes");
       dispatch(notesActions.setNotes(notes));
     } catch (error) {
-      // trigger error
+      dispatch(errorsActions.setUnhandled(error));
     } finally {
       dispatch(notesActions.setLoading(false));
     }
@@ -16,16 +17,16 @@ export function getNotes() {
 }
 
 export function addNote(note) {
-  return async dispatch => {
-    dispatch(notesActions.setLoading(true))
-    try{
+  return async (dispatch) => {
+    dispatch(notesActions.setLoading(true));
+    try {
       const added = await client("notes", { data: note });
-      dispatch(getNotes())
-      dispatch(notesActions.setLoading(false))
-    }catch(error) {
-
-    }finally {
-      dispatch(notesActions.setLoading(false))
+      dispatch(getNotes());
+      dispatch(notesActions.setLoading(false));
+    } catch (error) {
+      dispatch(errorsActions.setUnhandled(error));
+    } finally {
+      dispatch(notesActions.setLoading(false));
     }
-  }
+  };
 }

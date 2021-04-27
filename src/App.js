@@ -8,6 +8,7 @@ import { UnauthenticatedApp } from "./unauthenticated-app";
 import { login as userLogin } from "./utils/actions";
 import { useDispatch, useSelector } from "react-redux";
 import { tryAutoLogin } from "./store/auth-actions";
+import { NotifyError } from "./components/NotifyError";
 
 function App() {
   const { loading, user } = useSelector((state) => state.auth);
@@ -43,9 +44,13 @@ function App() {
   return user ? (
     <Router>
       <AuthenticatedApp />
+      <NotifyError />
     </Router>
   ) : (
-    <UnauthenticatedApp />
+    <>
+      <NotifyError />
+      <UnauthenticatedApp />
+    </>
   );
 }
 
