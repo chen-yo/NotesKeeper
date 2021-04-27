@@ -4,12 +4,16 @@ export const notesSlice = createSlice({
     name: 'notes',
     initialState: {
         notes: [],
-        isLoading: false
+        loading: false
     },
     reducers: {
         setNotes: (state, action) => {
             state.notes =  action.payload
+            state.loading = false
         },
+        setLoading: (state, action) => {
+            state.loading = action.payload
+        }
     }
 })
 

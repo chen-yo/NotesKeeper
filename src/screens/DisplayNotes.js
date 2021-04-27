@@ -12,36 +12,31 @@ import { Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import EditNote from "./EditNote";
 import { useDispatch } from "react-redux";
-import {notesActions} from '../store/notes'
+import {getNotes} from '../store/notes-actions'
 import { useSelector } from "react-redux";
 
 
 export default function DisplayNotes() {
-  const { isLoading, isIdle, isSuccess, isError, error, run } = useAsync();
   const dispatch = useDispatch()
-  const { notes } =  useSelector(state=>state.notes);
+  const { notes, loading } =  useSelector(state=>state.notes);
   let { path, url } = useRouteMatch();
   const history = useHistory();
   
 
   React.useEffect(() => {
-    run(getNotes().then((data) => dispatch(notesActions.setNotes(data))));
-  }, [run, dispatch]);
+     dispatch(getNotes())
+  }, [dispatch]);
 
-  function deleteNote(noteId) {
-    run(
-      client(`notes/${noteId}`, { method: "DELETE" }).then(() => {
-        actions.deleteNote(dispatch, noteId);
-      })
-    );
-  }
+  // function deleteNote(noteId) {
+  //   run(
+  //     client(`notes/${noteId}`, { method: "DELETE" }).then(() => {
+  //       actions.deleteNote(dispatch, noteId);
+  //     })
+  //   );
+  // }
 
-  if (isIdle) {
+  if (loading) {
     return <span>Loading..</span>;
-  }
-
-  if (isError) {
-    return <span>An error occured</span>;
   }
 
   return (
@@ -64,7 +59,7 @@ export default function DisplayNotes() {
             {...note}
             onClick={() => history.push(`${url}/${note.id}`)}
             key={note.id}
-            onDelete={deleteNote}
+            // onDelete={deleteNote}
           />
         ))}
       </div>
@@ -74,10 +69,6 @@ export default function DisplayNotes() {
       <Route path={`${path}/:noteId`} component={EditNote} />
     </>
   );
-}
-
-function getNotes() {
-  return client("notes");
 }
 
 function Note({

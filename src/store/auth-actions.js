@@ -9,7 +9,7 @@ async function getToken() {
   return id;
 }
 
-export function tryAutoLogin() {
+ export function tryAutoLogin() {
     return async dispatch => {
         dispatch(authActions.setLoading(true))
         const token = await getToken();
