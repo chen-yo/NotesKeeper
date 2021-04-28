@@ -1,27 +1,27 @@
+import { logDOM } from "@testing-library/react";
 import * as React from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
 import { Logo } from "./components/logo";
-import { useAsync } from "./utils/hooks";
+import {login} from './store/auth-actions' //add the login part
 
-function LoginForm({ onSubmit, submitButton }) {
-  const { isLoading, isError, error, run } = useAsync();
+function LoginForm({ onSubmit, submitButton, isLoading }) {
+  const {error} = useSelector(state=>state.errors)
+
   function handleSubmit(event) {
     event.preventDefault();
     const {email, password} =  event.target.elements;
-
-    run(
       onSubmit({
         email: email.value,
         password: password.value,
       })
-    );
-
-    
   }
 
   return (
+ 
     <Form onSubmit={handleSubmit}>
       <Form.Group>
+        {console.log('LoginForm is loading', isLoading)}
         <Form.Label htmlFor="email">Email</Form.Label>
         <Form.Control type="email" placeholder="Enter email" id="email" />
       </Form.Group>
@@ -39,13 +39,24 @@ function LoginForm({ onSubmit, submitButton }) {
           isLoading ? <span>Loading</span> : null
         )}
       </div>
-      {isError ? <span>Error occured</span> : null}
+      {error ? <span>Error occured</span> : null}
     </Form>
   );
 }
 
-function UnauthenticatedApp({ login, register }) {
+function UnauthenticatedApp() {
+  const [form, setForm] = React.useState(null)
+  const [isLoading, setIsLoading] = React.useState(false)
+  const dispatch = useDispatch()
 
+  React.useEffect(()=> {
+    if(form) {
+      setIsLoading(true)
+      dispatch(login(form))
+      setIsLoading(false)
+    }
+  }, [form, dispatch])
+  
   return (
     <div>
       <Logo width="80" height="80" />
@@ -57,7 +68,8 @@ function UnauthenticatedApp({ login, register }) {
           </Modal.Header>
           <Modal.Body>
             <LoginForm
-              onSubmit={login}
+              isLoading={isLoading}
+              onSubmit={(form)=>setForm(form)}
               submitButton={<Button variant="secondary">Login</Button>}
             ></LoginForm>
           </Modal.Body>

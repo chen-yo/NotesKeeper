@@ -1,51 +1,62 @@
-import { React, useEffect, useState } from "react";
+import { React, useEffect, useState, useRef } from "react";
 import { Modal, Button } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import { useHistory, useParams } from "react-router-dom";
-import { useAppContext } from "../context/app-context";
-import { client } from "../utils/api-client";
-import { useAsync } from "../utils/hooks";
 import NoteForm from "./NoteForm";
-import * as actions from '../utils/actions'
-import {updateNote} from '../context/note-context'
+import { getNote, updateNote } from "../store/notes-actions";
+import { useDispatch } from "react-redux";
 
 export default function EditNote() {
-  const { run, isLoading, data: note, isSuccess, isError } = useAsync();
   let { noteId } = useParams();
   noteId = parseInt(noteId);
   const history = useHistory();
-  const [, dispatch] = useAppContext();
+  const dispatch = useDispatch();
 
+  const [state, setState] = useState({
+    noteToEdit: null,
+    save: false,
+    updated: null
+  });
+
+  const {noteToEdit, save} = state
 
   function handleClose() {
     history.push("/notes");
   }
 
+  // load edited note
   useEffect(() => {
-    const getNote = (noteId) => {
-      return client(`notes/${noteId}`);
-    };
+    dispatch(getNote(noteId)).then((n) => {
+      setState(prev => ({...prev, noteToEdit: n}))
+    });
+  }, [noteId, dispatch]);
 
-    run(getNote(noteId));
-  }, [noteId, run]);
+  // Save edited note
+  useEffect(() => {
+    if(save) {
+      dispatch(updateNote(state.updated))
+      // setState(prev => ({...prev, save: false, updated: null}))
+      history.push("/notes");
+    } 
+  }, [save, dispatch]);
 
   function handleEdit(modifiedNote) {
-    // run(updateNote(modifiedNote)).then((n=>actions.updateNote(dispatch, n)).then(()=>history.push('/notes'))
-    updateNote(dispatch, modifiedNote).then(()=>history.push("/notes"))
+    setState(prev => ({...prev, updated: modifiedNote, save: true}))
   }
 
   return (
     <>
-      {isSuccess && (
+      {noteToEdit && (
         <Modal show={true} onHide={handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>Edit {note.title}</Modal.Title>
+            {/* <Modal.Title>Edit {noteToEdit.title}</Modal.Title> */}
           </Modal.Header>
           <Modal.Body>
-            <NoteForm onSubmit={handleEdit} note={note} />
+            <NoteForm onSubmit={handleEdit} note={noteToEdit} />
           </Modal.Body>
         </Modal>
       )}
-      {isLoading && (
+      {/* {isLoading && (
         <Modal show={true}>
           <Modal.Body>
             <span>Loading...</span>
@@ -56,7 +67,7 @@ export default function EditNote() {
         isError && 
       <span>Faild to load note with id: {noteId}</span>
 
-      }
+      } */}
     </>
   );
 }

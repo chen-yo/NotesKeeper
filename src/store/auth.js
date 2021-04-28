@@ -5,7 +5,7 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState: {
         user: null,
-        loading: false
+        loading: true //try auto login
     },
     reducers: {
         setUser: (state, action) => {

@@ -2,18 +2,15 @@
 /** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import styled from '@emotion/styled'
-import React from "react";
-import { useAsync } from "../utils/hooks";
-import { client } from "../utils/api-client";
+import React, { useEffect, useState } from "react";
 import { Route, useHistory, useRouteMatch } from "react-router-dom";
-import * as actions from "../utils/actions";
-import { useAppContext } from "../context/app-context";
 import { Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import EditNote from "./EditNote";
 import { useDispatch } from "react-redux";
 import {getNotes} from '../store/notes-actions'
 import { useSelector } from "react-redux";
+import { deleteNote } from "../store/notes-actions";
 
 
 export default function DisplayNotes() {
@@ -21,23 +18,26 @@ export default function DisplayNotes() {
   const { notes, loading } =  useSelector(state=>state.notes);
   let { path, url } = useRouteMatch();
   const history = useHistory();
+  const [noteToDelete, setNoteToDelete] = useState(null)
   
 
   React.useEffect(() => {
      dispatch(getNotes())
   }, [dispatch]);
 
-  // function deleteNote(noteId) {
-  //   run(
-  //     client(`notes/${noteId}`, { method: "DELETE" }).then(() => {
-  //       actions.deleteNote(dispatch, noteId);
-  //     })
-  //   );
-  // }
-
-  if (loading) {
-    return <span>Loading..</span>;
+  function deleteHandler(noteId) {
+    setNoteToDelete(noteId)
   }
+
+  useEffect(()=> {
+    if(noteToDelete) {
+      dispatch(deleteNote(noteToDelete))
+    }
+  }, [noteToDelete, dispatch])
+
+  // if (loading) {
+  //   return null;
+  // }
 
   return (
     <>
@@ -59,7 +59,7 @@ export default function DisplayNotes() {
             {...note}
             onClick={() => history.push(`${url}/${note.id}`)}
             key={note.id}
-            // onDelete={deleteNote}
+            onDelete={deleteHandler}
           />
         ))}
       </div>

@@ -13,6 +13,13 @@ export const notesSlice = createSlice({
         },
         setLoading: (state, action) => {
             state.loading = action.payload
+        },
+        updateNote: (state, action) => {
+            state.notes.forEach((note, index, arr) => {
+                if(note.id === action.payload.id) {
+                    arr[index] = {...action.payload}
+                }
+            })
         }
     }
 })
