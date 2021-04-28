@@ -1,13 +1,13 @@
-import { client } from "../utils/api-client";
 import { notesActions } from "./notes";
 import { errorsActions } from "./errors";
+import axios from 'axios'
 
 export function getNotes() {
   return async (dispatch) => {
     dispatch(notesActions.setLoading(true));
     try {
-      const notes = await client("notes");
-      dispatch(notesActions.setNotes(notes));
+      const notes = await axios.get("/notes");
+      dispatch(notesActions.setNotes(notes.data));
     } catch (error) {
       dispatch(errorsActions.setUnhandled(error));
     } finally {
@@ -19,7 +19,8 @@ export function getNotes() {
 export function getNote(noteId) {
   return async (dispatch) => {
     try {
-      return await client(`notes/${noteId}`);
+      let note =  await axios.get(`/notes/${noteId}`);
+      return note.data;
     } catch (error) {
       dispatch(errorsActions.setUnhandled(error));
     } finally {
@@ -31,7 +32,7 @@ export function getNote(noteId) {
 export function deleteNote(noteId) {
   return async (dispatch) => {
     try {
-       await client(`notes/${noteId}`, {method: 'DELETE'});
+       await axios.delete(`/notes/${noteId}`);
        dispatch(getNotes())
     } catch (error) {
       dispatch(errorsActions.setUnhandled(error));
@@ -43,8 +44,8 @@ export function deleteNote(noteId) {
 export function updateNote(note) {
   return async (dispatch) => {
     try {
-      const updated = await client('notes', {data: note, headers: {method: 'PUT'}});
-      dispatch(notesActions.updateNote(updated))
+      const updated = await axios.put('/notes', note);
+      dispatch(notesActions.updateNote(updated.data))
     } catch (error) {
       dispatch(errorsActions.setUnhandled(error));
     }
@@ -55,7 +56,7 @@ export function addNote(note) {
   return async (dispatch) => {
     dispatch(notesActions.setLoading(true));
     try {
-      const added = await client("notes", { data: note });
+      const added = await axios.post("/notes", note );
       dispatch(getNotes());
       dispatch(notesActions.setLoading(false));
     } catch (error) {

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import {setUserToken} from '../utils/api-client'
+import axios from 'axios'
 
 export const authSlice = createSlice({
     name: 'auth',
@@ -10,7 +10,6 @@ export const authSlice = createSlice({
     reducers: {
         setUser: (state, action) => {
             const user = action.payload
-            setUserToken(user.email) // as if email act as a token
             state.user =  user
             state.loading = false
         },

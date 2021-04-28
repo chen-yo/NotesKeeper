@@ -39,23 +39,24 @@ function LoginForm({ onSubmit, submitButton, isLoading }) {
           isLoading ? <span>Loading</span> : null
         )}
       </div>
-      {error ? <span>Error occured</span> : null}
+      {error ? <span>{error.message}</span> : null}
     </Form>
   );
 }
 
 function UnauthenticatedApp() {
-  const [form, setForm] = React.useState(null)
-  const [isLoading, setIsLoading] = React.useState(false)
+  const [state, setState] = React.useState({form: null, run: false, isLoading: false})
   const dispatch = useDispatch()
 
+  const {form,isLoading, run } = state
+
   React.useEffect(()=> {
-    if(form) {
-      setIsLoading(true)
+    if(run) {
+      setState(p=>({...p, isLoading: true}))
       dispatch(login(form))
-      setIsLoading(false)
+      setState(p=>({...p, isLoading: false, run: false}))
     }
-  }, [form, dispatch])
+  }, [run, dispatch, form])
   
   return (
     <div>
@@ -69,7 +70,7 @@ function UnauthenticatedApp() {
           <Modal.Body>
             <LoginForm
               isLoading={isLoading}
-              onSubmit={(form)=>setForm(form)}
+              onSubmit={(form)=>setState(p=>({...p, form, run: true}))}
               submitButton={<Button variant="secondary">Login</Button>}
             ></LoginForm>
           </Modal.Body>

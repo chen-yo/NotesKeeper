@@ -1,6 +1,6 @@
 import { authActions } from "./auth";
-import { client as authClient } from "../utils/api-client";
 import { errorsActions } from "./errors";
+import axios from 'axios'
 
 const localStorageKey = "__auth_provider_token__";
 
@@ -18,7 +18,12 @@ export function tryAutoLogin() {
       return;
     }
     try {
-      let user = await authClient("user/me", { headers: { ID: token } });
+      let headers = {
+        'ID': token
+      }
+      let user = await axios.get("/user/me",{ headers: headers });
+      user = user.data
+      axios.defaults.headers.common["Email"] = user.email; 
       dispatch(authActions.setUser(user));
     } catch (errors) {
       dispatch(errorsActions.setUnhandled(errors));
@@ -35,12 +40,16 @@ function handleUserResponse(user) {
 export function login({ email, password }) {
   return async (dispatch) => {
     try {
-      let user = await client("login", { email, password });
-      const { id } = user;
+      let user = await axios.post("/user/login", { email, password });
+      user = user.data
+      let { id } = user
       window.localStorage.setItem(localStorageKey, id);
+      axios.defaults.headers.common["Email"] = user.email; 
       dispatch(authActions.setUser(user));
     } catch (error) {
-      dispatch(errorsActions.setUnhandled(error));
+      if(error.response.status === 401) {
+        dispatch(errorsActions.setError({message: 'Email or\\and password are incorrect'}));
+      }else dispatch(errorsActions.setUnhandled(error));
     } finally {
     }
   };
@@ -48,6 +57,7 @@ export function login({ email, password }) {
 
 export function logout() {
   return async dispatch => {
+    delete axios.defaults.headers.common["Email"];
     await window.localStorage.removeItem(localStorageKey);
     dispatch(authActions.setUser(null))
   }
@@ -57,28 +67,30 @@ const delay = (ms) =>
   new Promise(resolve => setTimeout(resolve, ms));
 
 function register({ username, password }) {
-  return client("register", { username, password }).then(handleUserResponse);
+  return axios.post("register", { username, password }).then(handleUserResponse);
 }
 
 
 
 const authURL = "user";
 
-async function client(endpoint, data) {
-  const config = {
-    method: "POST",
-    body: JSON.stringify(data),
-    headers: { "Content-Type": "application/json" },
-  };
+// async function client(endpoint, data) {
+//   const config = {
+//     method: "POST",
+//     body: JSON.stringify(data),
+//     headers: { "Content-Type": "application/json" },
+//   };
 
-  return window
-    .fetch(`${authURL}/${endpoint}`, config)
-    .then(async (response) => {
-      const data = await response.json();
-      if (response.ok) {
-        return data;
-      } else {
-        return Promise.reject(data);
-      }
-    });
-}
+//   return window
+//     .fetch(`${authURL}/${endpoint}`, config)
+//     .then(async (response) => {
+     
+//       if (response.ok) {
+//         const data = await response.json();
+//         return data;
+//       } else {
+//         let error = await response.text()
+//         return Promise.reject(error);
+//       }
+//     });
+// }
