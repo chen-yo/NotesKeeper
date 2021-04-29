@@ -90,18 +90,31 @@ function Note({
     <div key={id} onClick={onClick} css={{
       border: "1px solid gray",
       borderRadius: "10px",
-      padding: "10px 10px 40px 10px",
+      padding: "10px 10px 10px 10px",
+      width: "200px",
+      height: "200px",
       margin: "10px",
       cursor: "pointer",
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
       ':hover': {
         border: "1px solid blue"
       },
-      backgroundColor: color
-  
+      display: 'flex',
+      flexDirection: 'column',
+      backgroundColor: color,
+      '& a': {
+        color: 'blue'
+      },
+      '& .trash': {
+        alignSelf: 'flex-start',
+        fontSize: '25px',
+      }
     }}>
-      {title}
-      <div>
-        <button onClick={handleDelete}>X</button>
+      <div ><span>{title}</span></div>
+      <div className="trash">
+      <button type="button" className="btn btn-danger" onClick={handleDelete}><i class="far fa-trash-alt"></i></button>
       </div>
     </div>
   );

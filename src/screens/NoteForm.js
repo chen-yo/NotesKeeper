@@ -80,6 +80,7 @@ export default function NoteForm({onSubmit, note, isLoading}) {
                 name="read"
                 onChange={handleChange}
                 label="Read"
+                checked={values.read}
               />
             </Form.Group>
             <Form.Group controlId="color">
