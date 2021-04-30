@@ -1,6 +1,8 @@
 import { authActions } from "./auth";
-import { errorsActions } from "./errors";
-import axios from 'axios'
+import { errorsActions, errorsReducer } from "./errors";
+import axios from "axios";
+import store from './index'
+
 
 const localStorageKey = "__auth_provider_token__";
 
@@ -19,11 +21,11 @@ export function tryAutoLogin() {
     }
     try {
       let headers = {
-        'ID': token
-      }
-      let user = await axios.get("/user/me",{ headers: headers });
-      user = user.data
-      axios.defaults.headers.common["Email"] = user.email; 
+        ID: token,
+      };
+      let user = await axios.get("/user/me", { headers: headers });
+      user = user.data;
+      axios.defaults.headers.common["Email"] = user.email;
       dispatch(authActions.setUser(user));
     } catch (errors) {
       dispatch(errorsActions.setUnhandled(errors));
@@ -33,54 +35,63 @@ export function tryAutoLogin() {
   };
 }
 
-function handleUserResponse(user) {
-  return user;
-}
-
 export function login({ email, password }) {
   return async (dispatch) => {
     try {
       let user = await axios.post("/user/login", { email, password });
-      user = user.data
-      let { id } = user
-      window.localStorage.setItem(localStorageKey, id);
-      axios.defaults.headers.common["Email"] = user.email; 
+      user = user.data;
+      let { id } = user;
+      window.localStorage.setItem(localStorageKey, id); // save the id as a token
+      axios.defaults.headers.common["Email"] = user.email; // 
       dispatch(authActions.setUser(user));
+      dispatch(errorsActions.clearErrors());
     } catch (error) {
-      if(error.response.status === 401) {
-        dispatch(errorsActions.setError({message: 'Email or\\and password are incorrect'}));
-      }else dispatch(errorsActions.setUnhandled(error));
+      if (error.response.status === 401) {
+        dispatch(
+          errorsActions.setError({
+            message: "Email or\\and password are incorrect",
+          })
+        );
+      } else dispatch(errorsActions.setUnhandled(error));
     } finally {
     }
   };
 }
 
 export function register(form) {
-  return dispatch => {
-    axios.post('/user/register', form)
-    .then(()=>dispatch(login({email: form.email, password: form.password})))
-    .catch(error=>{
-      dispatch(errorsActions.setError(error.response.data.errorFields))
-    })
+  return (dispatch) => {
+    axios
+      .post("/user/register", form)
+      .then(() => {
+        dispatch(login({ email: form.email, password: form.password }));
+       
+      })
+      .catch(handleErrors)
+  };
+}
+
+function handleErrors(error) {
+  let fields = error?.response?.data?.errorFields
+  if(fields) {
+    fields && store.dispatch(errorsActions.setError(error.response.data.errorFields));
+  } else {
+    store.dispatch(errorsActions.setUnhandled(error))
   }
 }
 
 export function logout() {
-  return async dispatch => {
+  return async (dispatch) => {
     delete axios.defaults.headers.common["Email"];
     await window.localStorage.removeItem(localStorageKey);
-    dispatch(authActions.setUser(null))
-  }
+    dispatch(authActions.setUser(null));
+  };
 }
 
-const delay = (ms) =>
-  new Promise(resolve => setTimeout(resolve, ms));
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // function register({ username, password }) {
 //   return axios.post("register", { username, password }).then(handleUserResponse);
 // }
-
-
 
 const authURL = "user";
 
@@ -94,7 +105,7 @@ const authURL = "user";
 //   return window
 //     .fetch(`${authURL}/${endpoint}`, config)
 //     .then(async (response) => {
-     
+
 //       if (response.ok) {
 //         const data = await response.json();
 //         return data;

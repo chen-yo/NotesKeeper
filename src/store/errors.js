@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 export const errorsSlice = createSlice({
     name: 'errors',
     initialState: {
-       error: null, // validation
+       error: {}, // validation
        unhandled: null
     },
     reducers: {
@@ -12,6 +12,9 @@ export const errorsSlice = createSlice({
         },
         setUnhandled: (state, action) => {
             state.unhandled = action.payload
+        },
+        clearErrors: (state) => {
+            state.error = {}
         }
     }
 })
