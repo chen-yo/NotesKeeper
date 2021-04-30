@@ -45,6 +45,41 @@ function LoginForm({ onSubmit, submitButton }) {
   );
 }
 
+function RegisterForm() {
+  const {error} = useSelector((state) => state.errors);
+  const dispatch = useDispatch()
+
+  function handleRegister(event) {
+    event.preventDefault();
+    // const { email, password } = event.target.elements;
+    // onSubmit({
+    //   email: email.value,
+    //   password: password.value,
+    // });
+  }
+
+  return (
+    <Form onSubmit={handleRegister}>
+      <Form.Group>
+        <Form.Label htmlFor="email">Email</Form.Label>
+        <Form.Control type="email" placeholder="Enter email" id="email" />
+      </Form.Group>
+      <Form.Group>
+        <Form.Label htmlFor="password">Password</Form.Label>
+        <Form.Control
+          type="password"
+          placeholder="Enter password"
+          id="password"
+        />
+      </Form.Group>
+      <div>
+      <Button variant="secondary">Register</Button>
+      </div>
+      {error ? <span>{JSON.stringify(error)}</span> : null}
+    </Form>
+  );
+}
+
 function UnauthenticatedApp() {
   const dispatch = useDispatch();
   const [showLogin, setShowLogin] = React.useState(true);
@@ -53,12 +88,7 @@ function UnauthenticatedApp() {
     setShowLogin(p=>(!p))
   
   }
-  const handleRegister = (form) => {
-    dispatch(register(form))
-  }
-
-
-
+ 
   let content = null;
 
   if (showLogin) {
@@ -85,10 +115,8 @@ function UnauthenticatedApp() {
           <Modal.Title>Register</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <LoginForm
-            onSubmit={handleRegister}
-            submitButton={<Button variant="secondary">Register</Button>}
-          ></LoginForm>
+          <RegisterForm
+          ></RegisterForm>
         </Modal.Body>
         <Modal.Footer>
           <button type="button" class="btn btn-link" onClick={handleToggle}>Login</button>
