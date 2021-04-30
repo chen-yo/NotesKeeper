@@ -55,6 +55,16 @@ export function login({ email, password }) {
   };
 }
 
+export function register(form) {
+  return dispatch => {
+    axios.post('/user/register', form)
+    .then(()=>dispatch(login({email: form.email, password: form.password})))
+    .catch(error=>{
+      dispatch(errorsActions.setError(error.response.data.errorFields))
+    })
+  }
+}
+
 export function logout() {
   return async dispatch => {
     delete axios.defaults.headers.common["Email"];
@@ -66,9 +76,9 @@ export function logout() {
 const delay = (ms) =>
   new Promise(resolve => setTimeout(resolve, ms));
 
-function register({ username, password }) {
-  return axios.post("register", { username, password }).then(handleUserResponse);
-}
+// function register({ username, password }) {
+//   return axios.post("register", { username, password }).then(handleUserResponse);
+// }
 
 
 
