@@ -51,12 +51,12 @@ function RegisterForm() {
   const dispatch = useDispatch();
 
   function handleRegister(form, bag) {
-    console.log(form)
+    console.log(form);
 
     // bag.setErrors({email: 'Asa dasd as'})
     // bag.setSubmitting(false);
-    dispatch(register(form))
-    
+    dispatch(register(form));
+
     // const { email, password } = event.target.elements;
     // onSubmit({
     //   email: email.value,
@@ -72,41 +72,49 @@ function RegisterForm() {
       }}
       onSubmit={handleRegister}
     >
-      {({values, handleSubmit, handleChange, touched})=>{ 
-      
-      return <Form onSubmit={handleSubmit} noValidate>
-          <Form.Group>
-            <Form.Label htmlFor="email">Email</Form.Label>
-            <Form.Control 
-              type="email" 
-              placeholder="Enter email" 
-              value={values.email}
-              onChange={handleChange}
-              isInvalid={touched.email && errors.email}
-              id="email" />
+      {({ values, handleSubmit, handleChange, touched }) => {
+        return (
+          <Form onSubmit={handleSubmit} noValidate>
+            <Form.Group>
+              <Form.Label htmlFor="email">Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Enter email"
+                value={values.email}
+                onChange={handleChange}
+                isInvalid={touched.email && errors.email}
+                isValid={touched.email && !errors.email}
+                id="email"
+              />
               <Form.Control.Feedback type="invalid">
                 {errors.email}
                 {console.log(errors.email)}
               </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group>
-            <Form.Label htmlFor="password">Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Enter password"
-              id="password"
-              value={values.password}
-              onChange={handleChange}
-              isInvalid={touched.password && errors.password}
-            />
-          </Form.Group>
-          <div>
-            <Button variant="secondary" type="submit">Register</Button>
-          </div>
-          {errors ? <span>{JSON.stringify(errors)}</span> : null}
-        </Form>}
-       
-      }
+            </Form.Group>
+            <Form.Group>
+              <Form.Label htmlFor="password">Password</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Enter password"
+                id="password"
+                value={values.password}
+                onChange={handleChange}
+                isInvalid={touched.password && errors.password}
+                isValid={touched.password && !errors.password}
+              />
+              <Form.Control.Feedback type="invalid">
+                {errors.password}
+                {console.log(errors.password)}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <div>
+              <Button variant="secondary" type="submit">
+                Register
+              </Button>
+            </div>
+          </Form>
+        );
+      }}
     </Formik>
   );
 }
