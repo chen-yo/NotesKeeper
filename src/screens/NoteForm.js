@@ -32,10 +32,7 @@ export default function NoteForm({onSubmit, note, isLoading}) {
 
   return (
     <Container className="pt-5">
-      <Formik
-        onSubmit={onSubmit}
-        initialValues={noteDefault}
-      >
+      <Formik onSubmit={onSubmit} initialValues={noteDefault}>
         {({ handleChange, handleSubmit, values }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Form.Group controlId="title">
@@ -76,7 +73,7 @@ export default function NoteForm({onSubmit, note, isLoading}) {
             </Form.Group>
             <Form.Group controlId="read">
               <Form.Check
-                type="checkbox"
+                type="switch"
                 name="read"
                 onChange={handleChange}
                 label="Read"
