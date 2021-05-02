@@ -1,7 +1,11 @@
 package com.chen_yonati.notes_keeper;
 
+import com.chen_yonati.notes_keeper.exception.MyValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.*;
@@ -39,8 +43,8 @@ public class AppService {
                         "Temperature 90, Cotton, 4kg",
                         1,
                         false,
-                        "red",
-                        "fa-a");
+                        "#CCCCCC",
+                        "fa fa-rocket");
 
                 notes.add(note);
             }
@@ -54,6 +58,11 @@ public class AppService {
         return user;
     }
 
+    public User findById(Integer id) {
+        Optional<User> user = userRepository.findById(id);
+       return user.orElse(null);
+    }
+
 
     public Iterable<User> listUsers() {
         return userRepository.findAll();
@@ -63,6 +72,17 @@ public class AppService {
         User user = userRepository.findByEmail(email);
         if (user == null) throw new IllegalArgumentException("Unable to find user with this email");
         return user;
+    }
+
+    public User registerUser(User newUser) throws MyValidationException {
+        User exist = userRepository.findByEmail(newUser.getEmail());
+        if(exist != null) {
+            Map<String, String> errors = new HashMap<>();
+            errors.put("email", "Email already exist");
+            throw new MyValidationException(errors);
+        }
+       User created =  userRepository.save(newUser);
+       return created;
     }
 
     public Set<Note> getNotes(String email) {

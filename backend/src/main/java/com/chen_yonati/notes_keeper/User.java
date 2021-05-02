@@ -3,6 +3,10 @@ package com.chen_yonati.notes_keeper;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.Set;
 
 @Entity
@@ -12,9 +16,15 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     private String name;
     @Column(unique = true, nullable = false)
+    @NotBlank(message = "Email field required")
+    @Email(message = "Not a valid email")
     private String email;
+
+    @Min(value = 4, message = "Password must be at least 4 chars")
+//    @Max(value = 10, message = "Password should be less than 10")
     private String password;
     private String token;
 

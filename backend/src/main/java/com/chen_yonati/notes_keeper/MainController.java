@@ -1,12 +1,23 @@
 package com.chen_yonati.notes_keeper;
 
+import com.chen_yonati.notes_keeper.exception.MyValidationException;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import java.lang.reflect.Method;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 public class MainController {
@@ -21,6 +32,26 @@ public class MainController {
         User authUser = appService.authenticate(user.getEmail(), user.getPassword());
         if (authUser != null) {
             return ResponseEntity.ok(authUser);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @RequestMapping(value = "/user/me", method = RequestMethod.GET)
+    public ResponseEntity<?> me(@RequestHeader(name = "ID") Integer id) {
+        User authUser = appService.findById(id);
+        if (authUser != null) {
+            return ResponseEntity.ok(authUser);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @RequestMapping(value = "/user/register", method = RequestMethod.POST)
+    public ResponseEntity<?> register(@Valid @RequestBody User newUser) throws MyValidationException {
+        User user = appService.registerUser(newUser);
+        if (user != null) {
+            return ResponseEntity.ok(user);
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
@@ -93,4 +124,26 @@ public class MainController {
         return new ResponseEntity<>(updated, HttpStatus.OK);
 
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({MethodArgumentNotValidException.class, MyValidationException.class})
+    ErrorResponse handleValidationExceptions(
+            Exception ex) {
+        Map<String, String> errors = new HashMap<>();
+        if(ex instanceof MethodArgumentNotValidException) {
+            MethodArgumentNotValidException ex0 = (MethodArgumentNotValidException)ex;
+            ex0.getBindingResult().getAllErrors().forEach((error) -> {
+                String fieldName = ((FieldError) error).getField();
+                String errorMessage = error.getDefaultMessage();
+                errors.put(fieldName, errorMessage);
+            });
+        } else {
+            MyValidationException ex0 = (MyValidationException)ex;
+            errors.putAll(ex0.getErrorFields());
+        }
+
+        return new ErrorResponse(errors);
+    }
 }
+
+
