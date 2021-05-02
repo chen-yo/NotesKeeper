@@ -1,7 +1,7 @@
 import { logDOM } from "@testing-library/react";
 import { Formik } from "formik";
 import * as React from "react";
-import { Button, Form, Modal } from "react-bootstrap";
+import { Button, Form, Modal, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Logo } from "./components/logo";
 import { login, register } from "./store/auth-actions"; //add the login part
@@ -33,13 +33,7 @@ function LoginForm({ onSubmit, submitButton }) {
         />
       </Form.Group>
       <div>
-        {React.cloneElement(
-          submitButton,
-          { type: "submit" },
-          ...(Array.isArray(submitButton.props.children)
-            ? submitButton.props.children
-            : [submitButton.props.children])
-        )}
+      <Button variant="secondary" type="submit">Login</Button>
       </div>
       {error ? <span>{JSON.stringify(error)}</span> : null}
     </Form>
@@ -48,6 +42,7 @@ function LoginForm({ onSubmit, submitButton }) {
 
 function RegisterForm() {
   const { error: errors } = useSelector((state) => state.errors);
+  // const { loading: isLoading } = useSelector((state) => state.auth.loading);
   const dispatch = useDispatch();
 
   function handleRegister(form, bag) {
@@ -110,6 +105,7 @@ function RegisterForm() {
             <div>
               <Button variant="secondary" type="submit">
                 Register
+                {/* {isLoading ? <Spinner animation="border" variant="secondary" /> : <span>Register</span>} */}
               </Button>
             </div>
           </Form>
@@ -138,7 +134,6 @@ function UnauthenticatedApp() {
         <Modal.Body>
           <LoginForm
             onSubmit={(form) => dispatch(login(form))}
-            submitButton={<Button variant="secondary">Login</Button>}
           ></LoginForm>
         </Modal.Body>
         <Modal.Footer>

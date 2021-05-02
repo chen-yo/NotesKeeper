@@ -5,9 +5,12 @@ import { UnauthenticatedApp } from "./unauthenticated-app";
 import { useDispatch, useSelector } from "react-redux";
 import { tryAutoLogin } from "./store/auth-actions";
 import { NotifyError } from "./components/NotifyError";
+// import {setUser} from './store/auth'
 
 function App() {
-  const { loading, user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
+  const {TRY_AUTO_LOGIN} = useSelector((state) => state.pending);
+  const pending = TRY_AUTO_LOGIN?.pending 
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(tryAutoLogin());
@@ -20,8 +23,10 @@ function App() {
   //   setData(null);
   // };
 
-  if (loading) {
-    return <span>Loading...</span>;
+  console.log(pending)
+
+  if(pending) {
+    return <span>Loading...</span>
   }
 
   // if (isError) {

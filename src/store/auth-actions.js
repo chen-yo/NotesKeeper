@@ -13,10 +13,10 @@ async function getToken() {
 
 export function tryAutoLogin() {
   return async (dispatch) => {
-    dispatch(authActions.setLoading(true));
+    dispatch(authActions.tryAutoLoginStart())
     const token = await getToken();
     if (!token) {
-      dispatch(authActions.setLoading(false));
+      dispatch(authActions.tryAutoLoginFail());
       return;
     }
     try {
@@ -26,47 +26,44 @@ export function tryAutoLogin() {
       let user = await axios.get("/user/me", { headers: headers });
       user = user.data;
       axios.defaults.headers.common["Email"] = user.email;
-      dispatch(authActions.setUser(user));
+      dispatch(authActions.tryAutoLoginSuccess(user));
     } catch (errors) {
       dispatch(errorsActions.setUnhandled(errors));
     } finally {
-      dispatch(authActions.setLoading(false));
+      dispatch(authActions.tryAutoLoginFail());
     }
   };
 }
 
 export function login({ email, password }) {
   return async (dispatch) => {
+    dispatch(errorsActions.clearErrors());
+    dispatch(authActions.userLoginStart());
+
     try {
       let user = await axios.post("/user/login", { email, password });
       user = user.data;
       let { id } = user;
       window.localStorage.setItem(localStorageKey, id); // save the id as a token
-      axios.defaults.headers.common["Email"] = user.email; // 
-      dispatch(authActions.setUser(user));
-      dispatch(errorsActions.clearErrors());
+      axios.defaults.headers.common["Email"] = user.email; //
+      dispatch(authActions.userLoginSuccess(user));
     } catch (error) {
-      if (error.response.status === 401) {
-        dispatch(
-          errorsActions.setError({
-            message: "Email or\\and password are incorrect",
-          })
-        );
-      } else dispatch(errorsActions.setUnhandled(error));
-    } finally {
+      dispatch(authActions.userLoginFail());
+      handleErrors(error);
     }
   };
 }
 
 export function register(form) {
   return (dispatch) => {
+    dispatch(authActions.setLoading(true))
     axios
       .post("/user/register", form)
       .then(() => {
         dispatch(login({ email: form.email, password: form.password }));
-       
       })
       .catch(handleErrors)
+      // .finally(()=>dispatch(authActions.setLoading(false)))
   };
 }
 
@@ -83,7 +80,7 @@ export function logout() {
   return async (dispatch) => {
     delete axios.defaults.headers.common["Email"];
     await window.localStorage.removeItem(localStorageKey);
-    dispatch(authActions.setUser(null));
+    dispatch(authActions.userLoginSuccess(null));
   };
 }
 
