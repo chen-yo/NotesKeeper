@@ -49,11 +49,11 @@ export default function NoteForm({onSubmit, note, isLoading}) {
             <Form.Group controlId="body">
               <Form.Label>Body</Form.Label>
               <Form.Control
-                type="textarea"
+                as="textarea"
                 name="body"
                 value={values.body}
                 onChange={handleChange}
-                rows={4}
+                rows={5}
                 placeholder="Place a description here..."
               />
             </Form.Group>
@@ -100,7 +100,7 @@ export default function NoteForm({onSubmit, note, isLoading}) {
               />
             </Form.Group>
             <Button variant="primary" type="submit" disabled={isLoading}>
-              {isLoading ? "Loading" : note ? "Edit" : "Add"}
+              {isLoading ? "Loading" : note ? "Update" : "Add"}
             </Button>
           </Form>
         )}
