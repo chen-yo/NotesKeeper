@@ -28,7 +28,7 @@ public class MainController {
     private AppService appService;
 
     @RequestMapping(value = "/user/login", method = RequestMethod.POST)
-    public ResponseEntity<?> authenticate(@RequestBody User user) {
+    public ResponseEntity<?> authenticate(@RequestBody @Valid User user) {
         User authUser = appService.authenticate(user.getEmail(), user.getPassword());
         if (authUser != null) {
             return ResponseEntity.ok(authUser);
