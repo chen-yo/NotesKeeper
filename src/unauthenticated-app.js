@@ -6,38 +6,72 @@ import { useDispatch, useSelector } from "react-redux";
 import { Logo } from "./components/logo";
 import { login, register } from "./store/auth-actions"; //add the login part
 
-function LoginForm({ onSubmit, submitButton }) {
-  const { error } = useSelector((state) => state.errors);
+function LoginForm() {
+  const { error: errors } = useSelector((state) => state.errors);
+  const {USER_LOGIN} = useSelector((state) => state.pending);
+  const pending = USER_LOGIN?.pending || false
+  const dispatch = useDispatch();
+  
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    const { email, password } = event.target.elements;
-    onSubmit({
-      email: email.value,
-      password: password.value,
-    });
+  function handleLogin(form, bag) {
+   dispatch(login(form))
   }
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Form.Group>
-        <Form.Label htmlFor="email">Email</Form.Label>
-        <Form.Control type="email" placeholder="Enter email" id="email" />
-      </Form.Group>
-      <Form.Group>
-        <Form.Label htmlFor="password">Password</Form.Label>
-        <Form.Control
-          type="password"
-          placeholder="Enter password"
-          id="password"
-        />
-      </Form.Group>
-      <div>
-      <Button variant="secondary" type="submit">Login</Button>
-      </div>
-      {error ? <span>{JSON.stringify(error)}</span> : null}
-    </Form>
+    <Formik
+      initialValues={{
+        email: "",
+        password: "",
+      }}
+      onSubmit={handleLogin}
+    >
+      {({ values, handleSubmit, handleChange, touched }) => {
+        return (
+          <Form onSubmit={handleSubmit} noValidate>
+            {console.log('Login Form', pending)}
+            <Form.Group>
+              <Form.Label htmlFor="email">Email</Form.Label>
+              <Form.Control  
+                type="email"
+                placeholder="Enter email"
+                value={values.email}
+                onChange={handleChange}
+                isInvalid={touched.email && errors.email}
+                // isValid={touched.email && !errors.email}
+                id="email"/>
+                              <Form.Control.Feedback type="invalid">
+                {errors.email}
+                {console.log(errors.email)}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label htmlFor="password">Password</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Enter password"
+                id="password"
+                value={values.password}
+                onChange={handleChange}
+                isInvalid={touched.password && errors.password}
+                // isValid={touched.password && !errors.password}
+              />
+                       <Form.Control.Feedback type="invalid">
+                {errors.password}
+                {console.log(errors.password)}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <div>
+              <Button variant="primary" type="submit" disabled={pending}>
+                {pending ? <Spinner animation="border" variant="primary" /> : <span>Login</span>}
+              </Button>
+            </div>
+          </Form>
+        );
+      }}
+    </Formik>
   );
+    
+    
 }
 
 function RegisterForm() {

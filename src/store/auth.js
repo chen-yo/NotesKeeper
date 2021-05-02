@@ -10,6 +10,11 @@ const userLoginStart = createAction(`${userLogin}_START`);
 const userLoginSuccess = createAction(`${userLogin}_SUCCESS`);
 const userLoginFail = createAction(`${userLogin}_FAIL`);
 
+const userRegister = "USER_REGISTER";
+const userRegisterStart = createAction(`${userRegister}_START`);
+const userRegisterSuccess = createAction(`${userRegister}_SUCCESS`);
+const userRegisterFail = createAction(`${userRegister}_FAIL`);
+
 const reducer = createReducer({ user: null }, (builder) => {
   builder.addCase(tryAutoLoginSuccess, (state, action) => {
     const user = action.payload;
@@ -17,6 +22,11 @@ const reducer = createReducer({ user: null }, (builder) => {
   });
 
   builder.addCase(userLoginSuccess, (state, action) => {
+    const user = action.payload;
+    state.user = user;
+  });
+
+  builder.addCase(userRegisterSuccess, (state, action) => {
     const user = action.payload;
     state.user = user;
   });
