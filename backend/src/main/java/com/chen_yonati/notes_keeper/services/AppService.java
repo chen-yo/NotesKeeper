@@ -1,12 +1,12 @@
-package com.chen_yonati.notes_keeper;
+package com.chen_yonati.notes_keeper.services;
 
-import com.chen_yonati.notes_keeper.exception.MyValidationException;
+import com.chen_yonati.notes_keeper.repos.NoteRepository;
+import com.chen_yonati.notes_keeper.repos.UserRepository;
+import com.chen_yonati.notes_keeper.exception.CustomValidationException;
+import com.chen_yonati.notes_keeper.model.Note;
+import com.chen_yonati.notes_keeper.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -74,12 +74,10 @@ public class AppService {
         return user;
     }
 
-    public User registerUser(User newUser) throws MyValidationException {
+    public User registerUser(User newUser) throws CustomValidationException {
         User exist = userRepository.findByEmail(newUser.getEmail());
         if(exist != null) {
-            Map<String, String> errors = new HashMap<>();
-            errors.put("email", "Email already exist");
-            throw new MyValidationException(errors);
+            throw new CustomValidationException("email", "Email already exist");
         }
        User created =  userRepository.save(newUser);
        return created;
