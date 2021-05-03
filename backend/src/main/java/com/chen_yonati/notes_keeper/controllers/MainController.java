@@ -4,10 +4,13 @@ import com.chen_yonati.notes_keeper.services.AppService;
 import com.chen_yonati.notes_keeper.model.Note;
 import com.chen_yonati.notes_keeper.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @RestController
@@ -19,18 +22,25 @@ public class MainController {
     @Autowired
     private AppService appService;
 
+
+    private User getAuthUser(HttpServletRequest request) {
+        User current = (User)request.getAttribute("user");
+        return current;
+    }
+
+
+
     @RequestMapping
     @GetMapping()
-    public ResponseEntity<Set<Note>> getNotes(@RequestHeader(name = "email") String email) {
-
+    public ResponseEntity<Set<Note>> getNotes(HttpServletRequest request) {
+        User current = getAuthUser(request);
         try {
-            Set<Note> notes = appService.getNotes(email);
+            Set<Note> notes = appService.getNotes(current.getId());
             return new ResponseEntity<>(notes, HttpStatus.OK);
 
         } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
     }
 
     @RequestMapping("{id}")

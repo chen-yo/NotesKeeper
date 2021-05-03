@@ -74,6 +74,11 @@ public class AppService {
         return user;
     }
 
+    public User findUserByEmail2(String email) {
+        User user = userRepository.findByEmail(email);
+        return user;
+    }
+
     public User registerUser(User newUser) throws CustomValidationException {
         User exist = userRepository.findByEmail(newUser.getEmail());
         if(exist != null) {
@@ -83,10 +88,8 @@ public class AppService {
        return created;
     }
 
-    public Set<Note> getNotes(String email) {
-        User u = userRepository.findByEmail(email);
-        if (u == null) throw new IllegalArgumentException("Email does not exist");
-        Set<Note> userNotes = noteRepository.findAll().stream().filter(note -> note.getUser().getId().equals(u.getId())).collect(Collectors.toSet());
+    public Set<Note> getNotes(int userId) {
+        Set<Note> userNotes = noteRepository.findAll().stream().filter(note -> note.getUser().getId().equals(userId)).collect(Collectors.toSet());
         return new HashSet<>(userNotes);
     }
     public Note getNote(String email, Integer noteId) {
