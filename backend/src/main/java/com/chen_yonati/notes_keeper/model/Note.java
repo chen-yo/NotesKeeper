@@ -1,4 +1,4 @@
-package com.chen_yonati.notes_keeper;
+package com.chen_yonati.notes_keeper.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;

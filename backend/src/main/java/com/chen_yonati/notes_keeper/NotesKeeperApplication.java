@@ -1,5 +1,6 @@
 package com.chen_yonati.notes_keeper;
 
+import com.chen_yonati.notes_keeper.services.AppService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;

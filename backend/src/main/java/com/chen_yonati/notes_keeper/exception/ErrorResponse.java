@@ -1,4 +1,4 @@
-package com.chen_yonati.notes_keeper;
+package com.chen_yonati.notes_keeper.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
