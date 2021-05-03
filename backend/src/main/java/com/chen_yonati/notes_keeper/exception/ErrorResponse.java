@@ -12,5 +12,8 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ErrorResponse {
+    private int statusCode;
+    private String type;
+    private String message;
     private Map<String, String> errorFields;
 }

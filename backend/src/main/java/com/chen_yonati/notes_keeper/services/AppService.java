@@ -77,7 +77,7 @@ public class AppService {
     public User registerUser(User newUser) throws CustomValidationException {
         User exist = userRepository.findByEmail(newUser.getEmail());
         if(exist != null) {
-            throw new CustomValidationException("email", "Email already exist");
+            throw new CustomValidationException("email", "Email already exist", "Email already exist");
         }
        User created =  userRepository.save(newUser);
        return created;
