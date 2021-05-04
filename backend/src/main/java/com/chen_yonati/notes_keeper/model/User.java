@@ -1,5 +1,6 @@
 package com.chen_yonati.notes_keeper.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -28,5 +29,7 @@ public class User {
     @NotBlank(message = "Password field required")
 //    @Max(value = 10, message = "Password should be less than 10")
     private String password;
+
+    @Column(unique = true)
     private String token;
 }

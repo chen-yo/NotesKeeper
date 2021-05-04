@@ -69,26 +69,18 @@ public class NoteController {
     public ResponseEntity<?> deleteNote(@PathVariable(name = "id") Integer noteId, HttpServletRequest request) {
         User user = getAuthUser(request);
         try {
-            appService.deleteNote(user, noteId);
+            Note deleted = appService.deleteNote(user.getId(), noteId);
+            return new ResponseEntity<>(deleted, HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
-
     }
 
-    @PutMapping("/notes")
-    public ResponseEntity<?> updateNote(@RequestHeader(name = "email") String email,
-                                        @RequestBody Note note) {
-
-        Note updated;
-        try {
-            updated = appService.updateNote(email, note);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    @RequestMapping(value = "/notes", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateNote(@RequestBody Note note, HttpServletRequest request) {
+        User user = getAuthUser(request);
+        Note updated = appService.updateNote(user.getId(), note);
         return new ResponseEntity<>(updated, HttpStatus.OK);
-
     }
 
 

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
@@ -44,5 +45,17 @@ public class AuthController {
         } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @RequestMapping(value = "/user/logout", method = RequestMethod.GET)
+    public ResponseEntity<?> logout(HttpServletRequest request) throws CustomValidationException {
+        User current = getAuthUser(request);
+        appService.logout(current);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private User getAuthUser(HttpServletRequest request) {
+        User current = (User)request.getAttribute("user");
+        return current;
     }
 }

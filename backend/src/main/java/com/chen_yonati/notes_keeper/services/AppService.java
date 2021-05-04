@@ -1,5 +1,7 @@
 package com.chen_yonati.notes_keeper.services;
 
+import com.chen_yonati.notes_keeper.exception.BadRequestException;
+import com.chen_yonati.notes_keeper.exception.ResourceNotFoundException;
 import com.chen_yonati.notes_keeper.repos.NoteRepository;
 import com.chen_yonati.notes_keeper.repos.UserRepository;
 import com.chen_yonati.notes_keeper.exception.CustomValidationException;
@@ -111,39 +113,31 @@ public class AppService {
         return noteRepository.save(note);
     }
 
-    public Note updateNote(String email, Note note) {
-        User user = findUserByEmail(email);
-        Optional<Note> modified = noteRepository.findById(note.getId()).map(edit -> {
-            edit.setBody(note.getBody());
-            edit.setColor(note.getColor());
-            edit.setIcon(note.getIcon());
-            edit.setPriority(note.getPriority());
-            edit.setRead(note.isRead());
-            edit.setTitle(note.getTitle());
-            return noteRepository.save(edit);
-        });
-
-        if (modified.isPresent()) {
-            return modified.get();
-        } else throw new IllegalArgumentException("Note with id: " + note.getId() + " not found ");
+    public Note updateNote(int userId, Note note) {
+        Note edit = findNoteWithException(userId, note.getId());
+        edit.setBody(note.getBody());
+        edit.setColor(note.getColor());
+        edit.setIcon(note.getIcon());
+        edit.setPriority(note.getPriority());
+        edit.setRead(note.isRead());
+        edit.setTitle(note.getTitle());
+        return noteRepository.save(edit);
     }
 
-    public void deleteNote(int userId, int noteId) {
-            Note note = noteRepository.findNote(userId, noteId);
-
-//        Set<Note> newNotes = user.getNotes().stream().filter(n->!n.getId().equals(noteId)).collect(Collectors.toSet());
-//        user.setNotes(newNotes);
-//        Note noteToDelete = noteRepository.findById(noteId)
-//                .filter(n->n.getId().equals(noteId))
-//                .findAny()
-//                .orElseThrow(()->new IllegalArgumentException("Unable to find note "+noteId+ " in users "+email+" notes"));
-//
-//
-//        userRepository.save(user);
-//        noteRepository.delete(noteToDelete);
-
-        noteRepository.deleteById(noteId);
+    public Note deleteNote(int userId, int noteId) {
+        Note noteToDelete = findNoteWithException(userId, noteId);
+        noteRepository.delete(noteToDelete);
+        return noteToDelete;
     }
 
+    private Note findNoteWithException(int userId, int noteId) {
+        Note note = noteRepository.findNote(userId, noteId);
+        if(note == null) throw new BadRequestException("Unable to find note with noteId = "+noteId + " or user does not have permissions to that note.");
+        return note;
+    }
 
+    public void logout(User current) {
+        current.setToken(null);
+        userRepository.save(current);
+    }
 }
