@@ -22,13 +22,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //examine the header for JWT
-        if (request.getRequestURL().toString().endsWith("/login") || request.getRequestURL().toString().endsWith("/register")){
+        if (request.getRequestURL().toString().endsWith("/login") || request.getRequestURL().toString().endsWith("/register")
+                || request.getRequestURL().toString().endsWith("/me")){
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = request.getHeader("Email");
-        User current = appService.findUserByEmail(token);
+        String token = request.getHeader("Token");
+        User current = appService.findByToken(token);
         if(current != null) {
             request.setAttribute("user", current);
             filterChain.doFilter(request, response);

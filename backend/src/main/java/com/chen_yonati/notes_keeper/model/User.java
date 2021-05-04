@@ -7,6 +7,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -28,5 +29,4 @@ public class User {
 //    @Max(value = 10, message = "Password should be less than 10")
     private String password;
     private String token;
-
 }

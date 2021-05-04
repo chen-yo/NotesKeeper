@@ -55,12 +55,20 @@ public class AppService {
 
     public User authenticate(String email, String password) {
         User user = userRepository.findByEmailAndPw(email, password);
+        if(user == null) return null;
+        user.setToken(UUID.randomUUID().toString());
+        userRepository.save(user);
         return user;
     }
 
     public User findById(Integer id) {
         Optional<User> user = userRepository.findById(id);
        return user.orElse(null);
+    }
+
+    public User findByToken(String token) {
+        User user = userRepository.findByToken(token);
+        return user;
     }
 
 
@@ -84,30 +92,23 @@ public class AppService {
         if(exist != null) {
             throw new CustomValidationException("email", "Email already exist", "Email already exist");
         }
+
+        newUser.setToken(UUID.randomUUID().toString());
        User created =  userRepository.save(newUser);
        return created;
     }
 
     public Set<Note> getNotes(int userId) {
-        Set<Note> userNotes = noteRepository.findAll().stream().filter(note -> note.getUser().getId().equals(userId)).collect(Collectors.toSet());
-        return new HashSet<>(userNotes);
-    }
-    public Note getNote(String email, Integer noteId) {
-        User u = userRepository.findByEmail(email);
-        if (u == null) throw new IllegalArgumentException("Email does not exist");
-        Optional<Note> note = noteRepository.findById(noteId);
-        if(note.isPresent()) {
-            return note.get();
-        }
-
-        throw new IllegalArgumentException("Unable to find note with id "+noteId);
+        return noteRepository.findNotes(userId);
     }
 
-    public Note addNote(String email, Note note) {
-        User user = findUserByEmail(email);
-        note.setUser(user);
-        Note added = noteRepository.save(note);
-        return added;
+    public Note getNote(Integer userId, Integer noteId) {
+        Note note = noteRepository.findNote(userId, noteId);
+        return note;
+    }
+
+    public Note addNote(Note note) {
+        return noteRepository.save(note);
     }
 
     public Note updateNote(String email, Note note) {
@@ -127,8 +128,8 @@ public class AppService {
         } else throw new IllegalArgumentException("Note with id: " + note.getId() + " not found ");
     }
 
-    public void deleteNote(String email, int noteId) {
-        User user = findUserByEmail(email);
+    public void deleteNote(int userId, int noteId) {
+            Note note = noteRepository.findNote(userId, noteId);
 
 //        Set<Note> newNotes = user.getNotes().stream().filter(n->!n.getId().equals(noteId)).collect(Collectors.toSet());
 //        user.setNotes(newNotes);

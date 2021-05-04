@@ -11,27 +11,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.*;
 
 @RestController
-@RequestMapping("api/notes")
-public class MainController {
-
-    private Map<UUID, User> tokenToUser = new HashMap<>();
+@RequestMapping("api")
+public class NoteController {
 
     @Autowired
     private AppService appService;
-
 
     private User getAuthUser(HttpServletRequest request) {
         User current = (User)request.getAttribute("user");
         return current;
     }
 
-
-
-    @RequestMapping
-    @GetMapping()
+    @RequestMapping(value = "/notes", method = RequestMethod.GET)
     public ResponseEntity<Set<Note>> getNotes(HttpServletRequest request) {
         User current = getAuthUser(request);
         try {
@@ -43,39 +38,38 @@ public class MainController {
         }
     }
 
-    @RequestMapping("{id}")
-    @GetMapping()
-    public ResponseEntity<?> getNote(@RequestHeader(name = "email") String email, @PathVariable(name = "id") Integer noteId) {
+    @RequestMapping(value = "/notes/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getNote(@PathVariable(name = "id") Integer noteId, HttpServletRequest request) {
+        User current = getAuthUser(request);
+        Note note = appService.getNote(current.getId(), noteId);
 
-        try {
-            Note note = appService.getNote(email, noteId);
+        if (note != null) {
+
             return new ResponseEntity<>(note, HttpStatus.OK);
-
-        } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping
-    public ResponseEntity<?> addNote(@RequestHeader(name = "email") String email,
-                                     @RequestBody Note note) {
+    @RequestMapping(value = "/notes", method = RequestMethod.POST)
+    public ResponseEntity<?> addNote(@RequestBody Note note, HttpServletRequest request) {
+        User user = getAuthUser(request);
+        note.setUser(user);
+
         try {
-            Note added = appService.addNote(email, note);
+            Note added = appService.addNote(note);
             return new ResponseEntity<>(added, HttpStatus.OK);
 
         } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<?> deleteNote(@RequestHeader(name = "email") String email,
-                                        @PathVariable(name = "id") Integer noteId) {
-
+    @RequestMapping(value = "/notes/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteNote(@PathVariable(name = "id") Integer noteId, HttpServletRequest request) {
+        User user = getAuthUser(request);
         try {
-            appService.deleteNote(email, noteId);
+            appService.deleteNote(user, noteId);
         } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -83,7 +77,7 @@ public class MainController {
 
     }
 
-    @PutMapping
+    @PutMapping("/notes")
     public ResponseEntity<?> updateNote(@RequestHeader(name = "email") String email,
                                         @RequestBody Note note) {
 

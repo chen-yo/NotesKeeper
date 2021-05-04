@@ -27,8 +27,8 @@ public class AuthController {
     }
 
     @RequestMapping(value = "/user/me", method = RequestMethod.GET)
-    public ResponseEntity<?> me(@RequestHeader(name = "ID") Integer id) {
-        User authUser = appService.findById(id);
+    public ResponseEntity<?> me(@RequestHeader(name = "Token") String token) {
+        User authUser = appService.findByToken(token);
         if (authUser != null) {
             return ResponseEntity.ok(authUser);
         } else {
