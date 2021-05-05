@@ -10,7 +10,6 @@ import { login, register } from "./store/auth-actions"; //add the login part
 function LoginForm() {
   const { error } = useSelector((state) => state.errors);
   const errors = error?.errorFields || {};
-  console.log(errors);
   const { USER_LOGIN } = useSelector((state) => state.pending);
   const pending = USER_LOGIN?.pending;
   const dispatch = useDispatch();
@@ -30,7 +29,6 @@ function LoginForm() {
       {({ values, handleSubmit, handleChange, touched }) => {
         return (
           <Form onSubmit={handleSubmit} noValidate>
-            {console.log("Login Form", pending)}
             <Form.Group>
               <Form.Label htmlFor="email">Email</Form.Label>
               <Form.Control
@@ -59,7 +57,6 @@ function LoginForm() {
               />
               <Form.Control.Feedback type="invalid">
                 {errors.password}
-                {console.log(errors.password)}
               </Form.Control.Feedback>
             </Form.Group>
             <div className="invalid-feedback d-block mb-2">
@@ -69,7 +66,7 @@ function LoginForm() {
             <div>
               <Button variant="primary" type="submit" disabled={pending}>
                 {pending ? (
-                  <Spinner animation="border" variant="secondary" />
+                  <Spinner animation="border" color="text-white" />
                 ) : (
                   <span>Login</span>
                 )}
@@ -88,7 +85,6 @@ function RegisterForm() {
   const dispatch = useDispatch();
 
   function handleRegister(form, bag) {
-    console.log(form);
 
     // bag.setErrors({email: 'Asa dasd as'})
     // bag.setSubmitting(false);
@@ -125,7 +121,6 @@ function RegisterForm() {
               />
               <Form.Control.Feedback type="invalid">
                 {errors.email}
-                {console.log(errors.email)}
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group>
@@ -141,7 +136,6 @@ function RegisterForm() {
               />
               <Form.Control.Feedback type="invalid">
                 {errors.password}
-                {console.log(errors.password)}
               </Form.Control.Feedback>
             </Form.Group>
             <div>

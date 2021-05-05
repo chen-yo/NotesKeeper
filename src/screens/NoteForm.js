@@ -21,15 +21,7 @@ export default function NoteForm({onSubmit, note, isLoading}) {
   if(note) {
     noteDefault = {...noteDefault, ...note}
   }
-  // function addNotePromise(note) {
-  //   return client("notes", { data: note });
-  // }
-
-  // function onSubmit(e) {
-  //   console.log('Sending', e);
-  //   run(addNotePromise(e))
-  // }
-
+  
   return (
     <Container className="pt-5">
       <Formik onSubmit={onSubmit} initialValues={noteDefault}>

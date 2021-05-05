@@ -35,15 +35,11 @@ export default function DisplayNotes() {
     }
   }, [noteToDelete, dispatch])
 
-  // if (loading) {
-  //   return null;
-  // }
-
   return (
     <>
-      <div>
+      <div className="mt-3 ml-2">
         <LinkContainer to="/notes/add">
-          <Button variant="outline-primary">Add note</Button>
+          <Button variant="primary"><i class="fas fa-plus"></i> Add note</Button>
         </LinkContainer>
       </div>
       <div
@@ -51,7 +47,7 @@ export default function DisplayNotes() {
           display: flex;
           flex-wrap: wrap;
           max-width: 50%;
-          margin: 0 auto;
+          margin: 20px auto;
         `}
       >
         {notes?.length > 0 && notes.map((note) => (
