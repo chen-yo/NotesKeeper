@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api")
@@ -23,7 +25,7 @@ public class AuthController {
         if (authUser != null) {
             return ResponseEntity.ok(authUser);
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+           throw new CustomValidationException("emailOrPasswordIncorrect", "Email or password incorrect");
         }
     }
 
