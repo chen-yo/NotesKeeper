@@ -10,7 +10,6 @@ export default function IconDropdown({
 
   return (
     <DropdownButton
-      alignRight
       title={<i className={value} aria-hidden="true"></i>}
       name={name}
       onSelect={(eventKey) => onChange({ target: { name, value: eventKey } })}
