@@ -6,7 +6,7 @@ export function getNotes() {
   return async (dispatch) => {
     dispatch(notesActions.setLoading(true));
     try {
-      const notes = await axios.get("/notes");
+      const notes = await axios.get("/api/notes");
       dispatch(notesActions.setNotes(notes.data));
     } catch (error) {
       dispatch(errorsActions.setUnhandled(error));
@@ -19,7 +19,7 @@ export function getNotes() {
 export function getNote(noteId) {
   return async (dispatch) => {
     try {
-      let note =  await axios.get(`/notes/${noteId}`);
+      let note =  await axios.get(`/api/notes/${noteId}`);
       return note.data;
     } catch (error) {
       dispatch(errorsActions.setUnhandled(error));
@@ -32,7 +32,7 @@ export function getNote(noteId) {
 export function deleteNote(noteId) {
   return async (dispatch) => {
     try {
-       await axios.delete(`/notes/${noteId}`);
+       await axios.delete(`/api/notes/${noteId}`);
        dispatch(getNotes())
     } catch (error) {
       dispatch(errorsActions.setUnhandled(error));
@@ -44,7 +44,7 @@ export function deleteNote(noteId) {
 export function updateNote(note) {
   return async (dispatch) => {
     try {
-      const updated = await axios.put('/notes', note);
+      const updated = await axios.put('/api/notes', note);
       dispatch(notesActions.updateNote(updated.data))
     } catch (error) {
       dispatch(errorsActions.setUnhandled(error));
@@ -56,7 +56,7 @@ export function addNote(note) {
   return async (dispatch) => {
     dispatch(notesActions.setLoading(true));
     try {
-      const added = await axios.post("/notes", note );
+      const added = await axios.post("/api/notes", note );
       dispatch(getNotes());
       dispatch(notesActions.setLoading(false));
     } catch (error) {

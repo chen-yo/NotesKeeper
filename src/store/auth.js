@@ -15,6 +15,8 @@ const userRegisterStart = createAction(`${userRegister}_START`);
 const userRegisterSuccess = createAction(`${userRegister}_SUCCESS`);
 const userRegisterFail = createAction(`${userRegister}_FAIL`);
 
+const userLogout = createAction('USER_LOGOUT');
+
 const reducer = createReducer({ user: null }, (builder) => {
   builder.addCase(tryAutoLoginSuccess, (state, action) => {
     const user = action.payload;
@@ -30,6 +32,11 @@ const reducer = createReducer({ user: null }, (builder) => {
     const user = action.payload;
     state.user = user;
   });
+
+  builder.addCase(userLogout, (state, action) => {
+    state.user = null
+  });
+
 });
 // export const authSlice = createSlice({
 //     name: 'auth',
@@ -56,5 +63,9 @@ export const authActions = {
   userLoginStart,
   userLoginSuccess,
   userLoginFail,
+  userRegisterStart,
+  userRegisterSuccess,
+  userRegisterFail,
+  userLogout,
 };
 export const authReducer = reducer;

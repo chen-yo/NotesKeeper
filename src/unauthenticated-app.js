@@ -1,20 +1,22 @@
-import { logDOM } from "@testing-library/react";
+/** @jsxImportSource @emotion/react */
+import { css } from "@emotion/react";
 import { Formik } from "formik";
 import * as React from "react";
-import { Button, Form, Modal, Spinner } from "react-bootstrap";
+import { Button, Container, Form, Modal, Spinner } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Logo } from "./components/logo";
 import { login, register } from "./store/auth-actions"; //add the login part
 
 function LoginForm() {
-  const { error: errors } = useSelector((state) => state.errors);
-  const {USER_LOGIN} = useSelector((state) => state.pending);
-  const pending = USER_LOGIN?.pending || false
+  const { error } = useSelector((state) => state.errors);
+  const errors = error?.errorFields || {};
+  console.log(errors);
+  const { USER_LOGIN } = useSelector((state) => state.pending);
+  const pending = USER_LOGIN?.pending;
   const dispatch = useDispatch();
-  
 
   function handleLogin(form, bag) {
-   dispatch(login(form))
+    dispatch(login(form));
   }
 
   return (
@@ -28,20 +30,20 @@ function LoginForm() {
       {({ values, handleSubmit, handleChange, touched }) => {
         return (
           <Form onSubmit={handleSubmit} noValidate>
-            {console.log('Login Form', pending)}
+            {console.log("Login Form", pending)}
             <Form.Group>
               <Form.Label htmlFor="email">Email</Form.Label>
-              <Form.Control  
+              <Form.Control
                 type="email"
                 placeholder="Enter email"
                 value={values.email}
                 onChange={handleChange}
                 isInvalid={touched.email && errors.email}
                 // isValid={touched.email && !errors.email}
-                id="email"/>
-                              <Form.Control.Feedback type="invalid">
+                id="email"
+              />
+              <Form.Control.Feedback type="invalid">
                 {errors.email}
-                {console.log(errors.email)}
               </Form.Control.Feedback>
             </Form.Group>
             <Form.Group>
@@ -55,14 +57,22 @@ function LoginForm() {
                 isInvalid={touched.password && errors.password}
                 // isValid={touched.password && !errors.password}
               />
-                       <Form.Control.Feedback type="invalid">
+              <Form.Control.Feedback type="invalid">
                 {errors.password}
                 {console.log(errors.password)}
               </Form.Control.Feedback>
             </Form.Group>
+            <div className="invalid-feedback d-block mb-2">
+              {errors?.emailOrPasswordIncorrect &&
+                "Email or password incorrect"}
+            </div>
             <div>
               <Button variant="primary" type="submit" disabled={pending}>
-                {pending ? <Spinner animation="border" variant="primary" /> : <span>Login</span>}
+                {pending ? (
+                  <Spinner animation="border" variant="secondary" />
+                ) : (
+                  <span>Login</span>
+                )}
               </Button>
             </div>
           </Form>
@@ -70,8 +80,6 @@ function LoginForm() {
       }}
     </Formik>
   );
-    
-    
 }
 
 function RegisterForm() {
@@ -166,12 +174,10 @@ function UnauthenticatedApp() {
           <Modal.Title>Login</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <LoginForm
-            onSubmit={(form) => dispatch(login(form))}
-          ></LoginForm>
+          <LoginForm onSubmit={(form) => dispatch(login(form))}></LoginForm>
         </Modal.Body>
         <Modal.Footer>
-          <button type="button" class="btn btn-link" onClick={handleToggle}>
+          <button type="button" className="btn btn-link" onClick={handleToggle}>
             Register
           </button>
         </Modal.Footer>
@@ -197,9 +203,21 @@ function UnauthenticatedApp() {
 
   return (
     <div>
-      <Logo width="80" height="80" />
-      <h1>Notes Keeper</h1>
-      <div>{content}</div>
+      <Container css={{display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center'
+    }}>
+        <div css={{
+          display: 'flex',
+          width: '50%',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <i class="fas fa-sticky-note"></i>
+          <h1 className="ml-2">Notes Keeper</h1>
+        </div>
+        <div css={{width: '100%'}}>{content}</div>
+      </Container>
     </div>
   );
 }

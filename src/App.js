@@ -16,27 +16,9 @@ function App() {
     dispatch(tryAutoLogin());
   }, [dispatch]);
 
-
-  // const register = (form) => auth.register(form).then((user) => setData(user));
-  // const logout = () => {
-  //   auth.logout();
-  //   setData(null);
-  // };
-
-  console.log(pending)
-
   if(pending) {
-    return <span>Loading...</span>
+    return <span>Trying auto login...</span>
   }
-
-  // if (isError) {
-  //   return (
-  //     <div>
-  //       <p>Uh oh... There's a problem. Try refreshing the app.</p>
-  //       <pre>{error?.message}</pre>
-  //     </div>
-  //   );
-  // }
 
   return user ? (
     <Router>

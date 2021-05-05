@@ -1,114 +1,94 @@
 import { authActions } from "./auth";
 import { errorsActions, errorsReducer } from "./errors";
-import axios from "axios";
+import axios from 'axios'
 import store from './index'
 
 
 const localStorageKey = "__auth_provider_token__";
 
-async function getToken() {
-  let id = window.localStorage.getItem(localStorageKey);
-  return id;
+
+function getToken() {
+  let token = window.localStorage.getItem(localStorageKey);
+  return token;
 }
 
 export function tryAutoLogin() {
-  return async (dispatch) => {
-    dispatch(authActions.tryAutoLoginStart())
-    const token = await getToken();
+  return (dispatch) => {
+    dispatch(authActions.tryAutoLoginStart());
+    const token = getToken();
     if (!token) {
       dispatch(authActions.tryAutoLoginFail());
       return;
     }
-    try {
-      let headers = {
-        ID: token,
-      };
-      let user = await axios.get("/user/me", { headers: headers });
-      user = user.data;
-      axios.defaults.headers.common["Email"] = user.email;
-      dispatch(authActions.tryAutoLoginSuccess(user));
-    } catch (errors) {
-      dispatch(errorsActions.setUnhandled(errors));
-    } finally {
-      dispatch(authActions.tryAutoLoginFail());
-    }
+
+    let headers = {
+      Token: token,
+    };
+
+    return axios
+      .get("/api/user/me", { headers: headers })
+      .then((res) => {
+        let user = res.data;
+        axios.defaults.headers.common["Token"] = user.token;
+        dispatch(authActions.tryAutoLoginSuccess(user));
+      })
+      .catch(() => dispatch(authActions.tryAutoLoginFail()))
   };
 }
+    
+    
 
 export function login({ email, password }) {
   return async (dispatch) => {
     dispatch(errorsActions.clearErrors());
     dispatch(authActions.userLoginStart());
-
-    try {
-      let user = await axios.post("/user/login", { email, password });
-      user = user.data;
-      let { id } = user;
-      window.localStorage.setItem(localStorageKey, id); // save the id as a token
-      axios.defaults.headers.common["Email"] = user.email; //
+    axios.post("/api/user/login", { email, password })
+    .then(res => {
+      let user = res.data
+      let { token } = user;
+      window.localStorage.setItem(localStorageKey, token);
+      axios.defaults.headers.common["Token"] = user.token;
       dispatch(authActions.userLoginSuccess(user));
-    } catch (error) {
-      dispatch(authActions.userLoginFail());
-      handleErrors(error);
-    }
+    })
+    .catch(error => {
+      dispatch(authActions.userLoginFail())
+      dispatch(errorsActions.setError(error.response.data))
+    })
   };
 }
 
 export function register(form) {
   return (dispatch) => {
-    dispatch(authActions.setLoading(true))
+    dispatch(authActions.userRegisterStart());
     axios
-      .post("/user/register", form)
-      .then(() => {
-        dispatch(login({ email: form.email, password: form.password }));
+      .post("/api/user/register", form)
+      .then((res) => {
+        let user = res.data;
+        let { token } = user;
+        window.localStorage.setItem(localStorageKey, token);
+        axios.defaults.headers.common["Token"] = user.token;
+        dispatch(authActions.userRegisterSuccess(user));
       })
-      .catch(handleErrors)
-      // .finally(()=>dispatch(authActions.setLoading(false)))
+      .catch(handleErrors);
   };
 }
 
 function handleErrors(error) {
-  let fields = error?.response?.data?.errorFields
-  if(fields) {
-    fields && store.dispatch(errorsActions.setError(error.response.data.errorFields));
+  let errorJson = error?.response?.data;
+  // check if its validation error, if so dispatch error to handle by global error reducer
+  if (errorJson?.type === "validation") {
+    store.dispatch(errorsActions.setError(errorJson.errorFields));
   } else {
-    store.dispatch(errorsActions.setUnhandled(error))
+    store.dispatch(errorsActions.setUnhandled(error));
   }
 }
 
 export function logout() {
   return async (dispatch) => {
-    delete axios.defaults.headers.common["Email"];
+    delete axios.defaults.headers.common["Token"];
     await window.localStorage.removeItem(localStorageKey);
-    dispatch(authActions.userLoginSuccess(null));
+    dispatch(authActions.userLogout());
   };
 }
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-// function register({ username, password }) {
-//   return axios.post("register", { username, password }).then(handleUserResponse);
-// }
-
-const authURL = "user";
-
-// async function client(endpoint, data) {
-//   const config = {
-//     method: "POST",
-//     body: JSON.stringify(data),
-//     headers: { "Content-Type": "application/json" },
-//   };
-
-//   return window
-//     .fetch(`${authURL}/${endpoint}`, config)
-//     .then(async (response) => {
-
-//       if (response.ok) {
-//         const data = await response.json();
-//         return data;
-//       } else {
-//         let error = await response.text()
-//         return Promise.reject(error);
-//       }
-//     });
-// }
