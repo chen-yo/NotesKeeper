@@ -1,7 +1,7 @@
 import { authActions } from "./auth";
-import { errorsActions, errorsReducer } from "./errors";
+import { errorsActions } from "./errors";
+import { handleErrors } from "./errors-actions";
 import axios from 'axios'
-import store from './index'
 
 
 const localStorageKey = "__auth_provider_token__";
@@ -71,16 +71,6 @@ export function register(form) {
       })
       .catch(handleErrors);
   };
-}
-
-function handleErrors(error) {
-  let errorJson = error?.response?.data;
-  // check if its validation error, if so dispatch error to handle by global error reducer
-  if (errorJson?.type === "validation") {
-    store.dispatch(errorsActions.setError(errorJson.errorFields));
-  } else {
-    store.dispatch(errorsActions.setUnhandled(error));
-  }
 }
 
 export function logout() {

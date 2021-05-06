@@ -5,7 +5,6 @@ import { UnauthenticatedApp } from "./unauthenticated-app";
 import { useDispatch, useSelector } from "react-redux";
 import { tryAutoLogin } from "./store/auth-actions";
 import { NotifyError } from "./components/NotifyError";
-// import {setUser} from './store/auth'
 
 function App() {
   const { user } = useSelector((state) => state.auth);
