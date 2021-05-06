@@ -27,7 +27,6 @@ public class User {
 
     @Min(value = 4, message = "Password must be at least 4 chars")
     @NotBlank(message = "Password field required")
-//    @Max(value = 10, message = "Password should be less than 10")
     private String password;
 
     @Column(unique = true)

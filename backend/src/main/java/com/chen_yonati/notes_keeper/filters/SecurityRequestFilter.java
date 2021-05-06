@@ -21,7 +21,6 @@ public class SecurityRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        //examine the header for JWT
         if (request.getRequestURL().toString().endsWith("/login") || request.getRequestURL().toString().endsWith("/register")
                 || request.getRequestURL().toString().endsWith("/me")){
             filterChain.doFilter(request, response);
