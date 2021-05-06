@@ -1,6 +1,7 @@
 import { notesActions } from "./notes";
 import { errorsActions } from "./errors";
 import axios from 'axios'
+import {handleErrors} from './errors-actions'
 
 export function getNotes() {
   return async (dispatch) => {
@@ -43,12 +44,12 @@ export function deleteNote(noteId) {
 
 export function updateNote(note) {
   return async (dispatch) => {
-    try {
-      const updated = await axios.put('/api/notes', note);
-      dispatch(notesActions.updateNote(updated.data))
-    } catch (error) {
-      dispatch(errorsActions.setUnhandled(error));
-    }
+      dispatch(errorsActions.clearErrors())
+      axios.put('/api/notes', note).then(res => {
+        let note = res.data
+        dispatch(notesActions.updateNote(note))
+      }).catch(handleErrors)
+  
   }
 }
 

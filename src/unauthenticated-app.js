@@ -207,7 +207,7 @@ function UnauthenticatedApp() {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-        <i class="fas fa-sticky-note"></i>
+        <i className="fas fa-sticky-note h1"></i>
           <h1 className="ml-2">Notes Keeper</h1>
         </div>
         <div css={{width: '100%'}}>{content}</div>
