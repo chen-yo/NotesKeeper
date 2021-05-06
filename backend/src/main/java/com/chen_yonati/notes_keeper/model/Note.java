@@ -6,6 +6,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
 @Data
@@ -15,12 +16,17 @@ public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @NotEmpty(message = "cannot be empty")
     public String title;
+
     @Column(columnDefinition = "TEXT")
     public String body;
+
     public int priority;
     @Column(name = "isRead")
     public boolean read;
+
     public String color;
     public String icon;
 

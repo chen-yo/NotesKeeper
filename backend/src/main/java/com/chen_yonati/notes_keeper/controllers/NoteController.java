@@ -52,7 +52,7 @@ public class NoteController {
     }
 
     @RequestMapping(value = "/notes", method = RequestMethod.POST)
-    public ResponseEntity<?> addNote(@RequestBody Note note, HttpServletRequest request) {
+    public ResponseEntity<?> addNote(@RequestBody @Valid Note note, HttpServletRequest request) {
         User user = getAuthUser(request);
         note.setUser(user);
 
@@ -77,7 +77,7 @@ public class NoteController {
     }
 
     @RequestMapping(value = "/notes", method = RequestMethod.PUT)
-    public ResponseEntity<?> updateNote(@RequestBody Note note, HttpServletRequest request) {
+    public ResponseEntity<?> updateNote(@RequestBody @Valid Note note, HttpServletRequest request) {
         User user = getAuthUser(request);
         Note updated = appService.updateNote(user.getId(), note);
         return new ResponseEntity<>(updated, HttpStatus.OK);
