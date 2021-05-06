@@ -1,6 +1,5 @@
 import { React, useEffect, useState, useRef } from "react";
-import { Modal, Button } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { Modal } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
 import NoteForm from "./NoteForm";
 import { getNote, updateNote } from "../store/notes-actions";
@@ -12,13 +11,7 @@ export default function EditNote() {
   const history = useHistory();
   const dispatch = useDispatch();
 
-  const [state, setState] = useState({
-    noteToEdit: null,
-    save: false,
-    updated: null
-  });
-
-  const {noteToEdit, save} = state
+  const [edit, setEdit] = useState(null);
 
   function handleClose() {
     history.push("/notes");
@@ -27,47 +20,27 @@ export default function EditNote() {
   // load edited note
   useEffect(() => {
     dispatch(getNote(noteId)).then((n) => {
-      setState(prev => ({...prev, noteToEdit: n}))
+      setEdit(n)
     });
   }, [noteId, dispatch]);
 
-  // Save edited note
-  useEffect(() => {
-    if(save) {
-      dispatch(updateNote(state.updated))
-      // setState(prev => ({...prev, save: false, updated: null}))
-      history.push("/notes");
-    } 
-  }, [save, dispatch]);
 
   function handleEdit(modifiedNote) {
-    setState(prev => ({...prev, updated: modifiedNote, save: true}))
+    dispatch(updateNote(modifiedNote))
+    history.push("/notes");
   }
 
   return (
     <>
-      {noteToEdit && (
+      {edit && (
         <Modal show={true} onHide={handleClose}>
           <Modal.Header closeButton>
-            {/* <Modal.Title>Edit {noteToEdit.title}</Modal.Title> */}
           </Modal.Header>
           <Modal.Body>
-            <NoteForm onSubmit={handleEdit} note={noteToEdit} />
+            <NoteForm onSubmit={handleEdit} note={edit} />
           </Modal.Body>
         </Modal>
       )}
-      {/* {isLoading && (
-        <Modal show={true}>
-          <Modal.Body>
-            <span>Loading...</span>
-          </Modal.Body>
-        </Modal>
-      )}
-      {
-        isError && 
-      <span>Faild to load note with id: {noteId}</span>
-
-      } */}
     </>
   );
 }
