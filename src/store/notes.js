@@ -1,28 +1,43 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createAction, createReducer, createSlice } from '@reduxjs/toolkit'
 
-export const notesSlice = createSlice({
-    name: 'notes',
-    initialState: {
-        notes: [],
-        loading: false
-    },
-    reducers: {
-        setNotes: (state, action) => {
-            state.notes =  action.payload
-            state.loading = false
-        },
-        setLoading: (state, action) => {
-            state.loading = action.payload
-        },
-        updateNote: (state, action) => {
-            state.notes.forEach((note, index, arr) => {
-                if(note.id === action.payload.id) {
-                    arr[index] = {...action.payload}
-                }
-            })
-        }
-    }
+// export const notesSlice = createSlice({
+//     name: 'notes',
+//     initialState: {
+//         notes: [],
+//     },
+//     reducers: {
+//         loadNotesSuccess: (state, action) => {
+//             state.notes =  action.payload
+//         },
+//         loadNotesStart: (state, action) => {
+//             return state
+//         },
+//         loadNotesFail: (state, action) => {
+//             return state
+//         },
+//         updateNote: (state, action) => {
+//             state.notes.forEach((note, index, arr) => {
+//                 if(note.id === action.payload.id) {
+//                     arr[index] = {...action.payload}
+//                 }
+//             })
+//         }
+//     }
+// })
+
+const loadNotesStart = createAction('LOAD_NOTES_START')
+const loadNotesFail = createAction('LOAD_NOTES_FAIL')
+const loadNotesSuccess = createAction('LOAD_NOTES_SUCCESS')
+
+const initialState = {
+    notes: []
+}
+
+export const notesReducer = createReducer(initialState, builder => {
+    builder.addCase(loadNotesSuccess, (state, action) => {
+        state.notes =  action.payload
+    })
 })
 
-export const notesActions = notesSlice.actions
-export const notesReducer = notesSlice.reducer
+
+export const notesActions = {loadNotesStart, loadNotesFail, loadNotesSuccess}

@@ -3,17 +3,23 @@ import { errorsActions } from "./errors";
 import axios from 'axios'
 import {handleErrors} from './errors-actions'
 
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export function getNotes() {
   return async (dispatch) => {
-    dispatch(notesActions.setLoading(true));
-    try {
-      const notes = await axios.get("/api/notes");
-      dispatch(notesActions.setNotes(notes.data));
-    } catch (error) {
-      dispatch(errorsActions.setUnhandled(error));
-    } finally {
-      dispatch(notesActions.setLoading(false));
-    }
+    dispatch(notesActions.loadNotesStart());
+    delay(2000).then(()=> {
+      axios
+      .get("/api/notes")
+      .then((res) => {
+        dispatch(notesActions.loadNotesSuccess(res.data));
+      })
+      .catch((error) => {
+        dispatch(notesActions.loadNotesFail());
+        dispatch(errorsActions.setUnhandled(error));
+      });
+    })
+    
   };
 }
 
