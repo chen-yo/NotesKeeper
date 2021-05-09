@@ -1,15 +1,18 @@
 import { React, useEffect, useState, useRef } from "react";
-import { Modal } from "react-bootstrap";
+import { Modal, Spinner } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
 import NoteForm from "./NoteForm";
 import { getNote, updateNote } from "../store/notes-actions";
 import { useDispatch } from "react-redux";
+import { useLoadingIndicator } from "../utils/hooks";
+
 
 export default function EditNote() {
   let { noteId } = useParams();
   noteId = parseInt(noteId);
   const history = useHistory();
   const dispatch = useDispatch();
+  const isLoading = useLoadingIndicator('LOAD_NOTE')
 
   const [edit, setEdit] = useState(null);
 
@@ -19,8 +22,8 @@ export default function EditNote() {
 
   // load edited note
   useEffect(() => {
-    dispatch(getNote(noteId)).then((n) => {
-      setEdit(n)
+    getNote(noteId, dispatch).then((n) => {
+      setEdit(n);
     });
   }, [noteId, dispatch]);
 
@@ -32,15 +35,14 @@ export default function EditNote() {
 
   return (
     <>
-      {edit && (
         <Modal show={true} onHide={handleClose}>
           <Modal.Header closeButton>
           </Modal.Header>
           <Modal.Body>
-            <NoteForm onSubmit={handleEdit} note={edit} />
+            {isLoading ? <Spinner animation="border" /> : <NoteForm onSubmit={handleEdit} note={edit} />}
           </Modal.Body>
         </Modal>
-      )}
+      )
     </>
   );
 }

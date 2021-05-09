@@ -41,3 +41,8 @@ export const pendingReducer = (state = {}, action) => {
       .slice(0, -1)
       .join("_");
    }
+
+   export function getLoadingIndicator(actionName, pendingState) {
+     return pendingState[actionName]?.pending
+  }
+  

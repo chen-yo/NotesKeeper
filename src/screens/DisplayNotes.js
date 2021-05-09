@@ -18,7 +18,7 @@ import { useDispatch } from "react-redux";
 import { getNotes } from "../store/notes-actions";
 import { useSelector } from "react-redux";
 import { deleteNote } from "../store/notes-actions";
-import { pendingReducer } from "../store/pending";
+import { useLoadingIndicator } from "../utils/hooks";
 
 const MyCards = styled.div({
   width: "800px",
@@ -49,15 +49,14 @@ const MyCard = styled.div(({ bgColor }) => ({
   }
 }));
 
-function createIndicator(actionName, pendingState) {
-  return pendingState[actionName]?.pending
-}
+
+
 
 export default function DisplayNotes() {
   const dispatch = useDispatch();
   const { notes } = useSelector((state) => state.notes);
-  const pendingState = useSelector((state) => state.pending);
-  const isLoading = createIndicator('LOAD_NOTES', pendingState)
+  const isLoading = useLoadingIndicator('LOAD_NOTES');
+ 
 
 
   let { path, url } = useRouteMatch();

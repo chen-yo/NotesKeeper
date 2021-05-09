@@ -23,17 +23,19 @@ export function getNotes() {
   };
 }
 
-export function getNote(noteId) {
-  return async (dispatch) => {
-    try {
-      let note =  await axios.get(`/api/notes/${noteId}`);
-      return note.data;
-    } catch (error) {
-      dispatch(errorsActions.setUnhandled(error));
-    } finally {
-      dispatch(notesActions.setLoading(false));
-    }
-  };
+export function getNote(noteId, dispatch) {
+    dispatch(notesActions.loadNoteStart());
+    return delay(2000).then(()=>axios
+        .get(`/api/notes/${noteId}`)
+        .then((res) => {
+          let note = res.data;
+          dispatch(notesActions.loadNoteSuccess());
+          return note;
+        })
+        .catch((error) => {
+          dispatch(notesActions.loadNoteFail());
+          handleErrors(error);
+        }));
 }
 
 export function deleteNote(noteId) {

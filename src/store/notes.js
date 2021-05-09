@@ -1,4 +1,4 @@
-import { createAction, createReducer, createSlice } from '@reduxjs/toolkit'
+import { createAction, createReducer, createSlice } from "@reduxjs/toolkit";
 
 // export const notesSlice = createSlice({
 //     name: 'notes',
@@ -25,19 +25,29 @@ import { createAction, createReducer, createSlice } from '@reduxjs/toolkit'
 //     }
 // })
 
-const loadNotesStart = createAction('LOAD_NOTES_START')
-const loadNotesFail = createAction('LOAD_NOTES_FAIL')
-const loadNotesSuccess = createAction('LOAD_NOTES_SUCCESS')
+const loadNotesStart = createAction("LOAD_NOTES_START");
+const loadNotesFail = createAction("LOAD_NOTES_FAIL");
+const loadNotesSuccess = createAction("LOAD_NOTES_SUCCESS");
+
+const loadNoteStart = createAction("LOAD_NOTE_START");
+const loadNoteFail = createAction("LOAD_NOTE_FAIL");
+const loadNoteSuccess = createAction("LOAD_NOTE_SUCCESS");
 
 const initialState = {
-    notes: []
-}
+  notes: [],
+};
 
-export const notesReducer = createReducer(initialState, builder => {
-    builder.addCase(loadNotesSuccess, (state, action) => {
-        state.notes =  action.payload
-    })
-})
+export const notesReducer = createReducer(initialState, (builder) => {
+  builder.addCase(loadNotesSuccess, (state, action) => {
+    state.notes = action.payload;
+  });
+});
 
-
-export const notesActions = {loadNotesStart, loadNotesFail, loadNotesSuccess}
+export const notesActions = 
+{ loadNotesStart,
+loadNotesFail,
+ loadNotesSuccess,
+ loadNoteStart,
+loadNoteFail,
+ loadNoteSuccess,
+ };
