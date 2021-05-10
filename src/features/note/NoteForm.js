@@ -4,8 +4,8 @@ import {
   Container,
   Button,
 } from "react-bootstrap";
-import IconDropdown from "../components/IconDropdown";
 import { Formik } from "formik";
+import { IconDropdown } from "../../components/IconDropdown";
 
 export default function NoteForm({onSubmit, note, isLoading}) {
 

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { DropdownButton, Dropdown } from "react-bootstrap";
 
-export default function IconDropdown({
+export function IconDropdown({
   value = "fa fa-rocket",
   name,
   onChange,

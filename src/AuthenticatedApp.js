@@ -1,13 +1,14 @@
 import React from "react";
 import { Navbar, Nav } from "react-bootstrap";
-import DisplayNotes from "./screens/DisplayNotes";
 import { Redirect, Route, Switch } from "react-router-dom";
-import AddNote from "./screens/AddNote";
 import { NotFoundScreen } from "./screens/NotFoundScreen";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { logout } from "./features/user/auth-actions";
+import AddNote from './features/note/AddNote'
+import DisplayNotes from "./features/note/DisplayNotes";
+
 
 export default function AuthenticatedApp() {
   const user = useSelector((state) => state.auth.user);

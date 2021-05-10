@@ -1,7 +1,7 @@
 import { notesActions } from "./notes";
-import { errorsActions } from "./errors";
+import { errorsActions } from "../../store/errors";
 import axios from 'axios'
-import {handleErrors} from './errors-actions'
+import {handleErrors} from '../../store/errors-actions'
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 

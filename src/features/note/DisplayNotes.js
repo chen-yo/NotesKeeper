@@ -6,19 +6,14 @@ import React, { useEffect, useState } from "react";
 import { Route, useHistory, useRouteMatch } from "react-router-dom";
 import {
   Button,
-  Card,
-  CardColumns,
-  CardDeck,
-  CardGroup,
   Container,
 } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import EditNote from "./EditNote";
 import { useDispatch } from "react-redux";
-import { getNotes } from "../store/notes-actions";
 import { useSelector } from "react-redux";
-import { deleteNote } from "../store/notes-actions";
-import { useLoadingIndicator } from "../utils/hooks";
+import { deleteNote, getNotes } from "./notes-actions";
+import {useLoadingIndicator} from '../../utils/hooks'
 
 const MyCards = styled.div({
   width: "800px",

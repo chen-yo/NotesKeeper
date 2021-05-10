@@ -1,9 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
+import { notesReducer } from '../features/note/notes'
 import {authReducer} from '../features/user/auth'
-import {notesReducer} from './notes'
 import {errorsReducer} from './errors'
 import { pendingReducer } from './pending'
-import useSelector from 'react'
 
 
 export default configureStore({

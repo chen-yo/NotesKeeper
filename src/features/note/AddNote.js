@@ -2,9 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import NoteForm from "./NoteForm";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import {addNote} from '../store/notes-actions'
+import {addNote} from './notes-actions'
 
-export default function AddForm() {
+export default function AddNote() {
   const {loading} = useSelector(state=>state.notes)
   const dispatch = useDispatch()
   const [addedNote, setAddedNote] = useState(null)
@@ -15,6 +15,8 @@ export default function AddForm() {
   }
 
   useEffect(() => {
+
+
     if(mounted.current) {
       mounted.current = false
       return

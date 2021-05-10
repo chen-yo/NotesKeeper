@@ -2,9 +2,9 @@ import { React, useEffect, useState, useRef } from "react";
 import { Modal, Spinner } from "react-bootstrap";
 import { useHistory, useParams } from "react-router-dom";
 import NoteForm from "./NoteForm";
-import { getNote, updateNote } from "../store/notes-actions";
 import { useDispatch } from "react-redux";
-import { useLoadingIndicator } from "../utils/hooks";
+import {useLoadingIndicator} from '../../utils/hooks'
+import { getNotes, updateNote } from "./notes-actions";
 
 
 export default function EditNote() {
@@ -22,7 +22,7 @@ export default function EditNote() {
 
   // load edited note
   useEffect(() => {
-    getNote(noteId, dispatch).then((n) => {
+    getNotes(noteId, dispatch).then((n) => {
       setEdit(n);
     });
   }, [noteId, dispatch]);
