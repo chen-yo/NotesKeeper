@@ -39,7 +39,7 @@ export default function EditNote() {
           <Modal.Header closeButton>
           </Modal.Header>
           <Modal.Body>
-            {isLoading ? <Spinner animation="border" /> : <NoteForm onSubmit={handleEdit} note={edit} />}
+            {isLoading ? <Spinner animation="border" /> : edit && <NoteForm onSubmit={handleEdit} note={edit} />}
           </Modal.Body>
         </Modal>
       )

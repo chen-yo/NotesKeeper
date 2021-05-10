@@ -1,7 +1,7 @@
-import { authActions } from "./auth";
-import { errorsActions } from "./errors";
-import { handleErrors } from "./errors-actions";
 import axios from 'axios'
+import { errorsActions } from "../../store/errors";
+import { handleErrors } from '../../store/errors-actions';
+import { authActions } from "./auth";
 
 
 const localStorageKey = "__auth_provider_token__";

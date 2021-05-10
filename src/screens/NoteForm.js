@@ -24,7 +24,7 @@ export default function NoteForm({onSubmit, note, isLoading}) {
   
   return (
     <Container className="pt-5">
-      <Formik onSubmit={onSubmit} initialValues={noteDefault} enableReinitialize>
+      <Formik onSubmit={onSubmit} initialValues={noteDefault}>
         {({ handleChange, handleSubmit, values }) => (
           <Form noValidate onSubmit={handleSubmit}>
             <Form.Group controlId="title">

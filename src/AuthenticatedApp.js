@@ -1,15 +1,15 @@
 import React from "react";
 import { Navbar, Nav } from "react-bootstrap";
 import DisplayNotes from "./screens/DisplayNotes";
-import { Redirect, Route, NavLink, Link, Switch } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import AddNote from "./screens/AddNote";
 import { NotFoundScreen } from "./screens/NotFoundScreen";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { logout } from "./store/auth-actions";
+import { logout } from "./features/user/auth-actions";
 
-function AuthenticatedApp() {
+export default function AuthenticatedApp() {
   const user = useSelector((state) => state.auth.user);
   const dispatch = useDispatch();
   const { email } = user;
@@ -56,5 +56,3 @@ function AppRoutes() {
     </Switch>
   );
 }
-
-export { AuthenticatedApp };
