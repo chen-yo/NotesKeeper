@@ -3,7 +3,7 @@ import { Formik } from "formik";
 import * as React from "react";
 import { Button, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { register } from "./auth-actions";
+import { register } from "./userSlice";
 
 export function RegisterForm() {
     const { error: errors } = useSelector((state) => state.errors);

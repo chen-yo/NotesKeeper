@@ -1,7 +1,6 @@
 import { notesActions } from "./notes";
-import { errorsActions } from "../../store/errors";
+import { errorsActions, handleErrors2 } from "../../store/errorsSlice";
 import axios from 'axios'
-import {handleErrors} from '../../store/errors-actions'
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -34,7 +33,7 @@ export function getNote(noteId, dispatch) {
         })
         .catch((error) => {
           dispatch(notesActions.loadNoteFail());
-          handleErrors(error);
+          // handleErrors2(error);
         }));
 }
 
@@ -56,7 +55,7 @@ export function updateNote(note) {
       axios.put('/api/notes', note).then(res => {
         let note = res.data
         dispatch(notesActions.updateNote(note))
-      }).catch(handleErrors)
+      }).catch(handleErrors2)
   
   }
 }

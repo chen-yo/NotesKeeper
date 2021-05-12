@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Container, Modal } from "react-bootstrap";
 import { useDispatch } from "react-redux";
-import { login } from "./features/user/auth-actions";
 import { LoginForm } from "./features/user/LoginForm";
 import { RegisterForm } from "./features/user/RegisterForm";
+import { login } from "./features/user/userSlice";
 
 
 export default function UnauthenticatedApp() {

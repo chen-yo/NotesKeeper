@@ -5,9 +5,9 @@ import { NotFoundScreen } from "./screens/NotFoundScreen";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { logout } from "./features/user/auth-actions";
 import AddNote from './features/note/AddNote'
 import DisplayNotes from "./features/note/DisplayNotes";
+import {logout} from './features/user/userSlice'
 
 
 export default function AuthenticatedApp() {

@@ -1,6 +1,6 @@
 import { Button, Modal } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { errorsActions } from "../store/errors";
+import { errorsActions } from "../store/errorsSlice";
 
 export function NotifyError({ error }) {
   const dispatch = useDispatch();

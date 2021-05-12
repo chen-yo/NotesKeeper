@@ -1,48 +1,36 @@
-export const pendingReducer = (state = {}, action) => {
-    const { type } = action;
-    const actionName = getActionName(type);
-  
-    if (!actionName) {
-      return {
-        ...state
-      };
-    }
-  
-    if (type.endsWith('_START')) {
-      return {
-        ...state,
-        [actionName]: {
-          pending: true
-        }
-      };
-    }
-  
-    if (type.endsWith('_SUCCESS') || type.endsWith('_FAIL')) {
-      return {
-        ...state,
-        [actionName]: {
-          pending: false
-        }
-      };
-    }
-  
-    return {
-      ...state
-    };
-  };
+import { createReducer } from "@reduxjs/toolkit";
 
-  function getActionName(actionType) {
-    if (typeof actionType !== 'string') {
-      return null;
-    }
-   
-    return actionType
-      .split("_")
-      .slice(0, -1)
-      .join("_");
-   }
+export const pendingReducer = createReducer({}, (builder) => {
+  builder
+    .addMatcher(
+      ({ type }) => type.endsWith("/pending"),
+      (state, action) => {
+        let actionPrefix = getActionPrefix(action);
+        state[actionPrefix] = true;
+      }
+    )
+    .addMatcher(
+      ({ type }) => type.endsWith("/fulfilled"),
+      (state, action) => {
+        let actionPrefix = getActionPrefix(action);
+        state[actionPrefix] = false;
+      }
+    )
+    .addMatcher(
+      ({ type }) => type.endsWith("/rejected"),
+      (state, action) => {
+        let actionPrefix = getActionPrefix(action);
+        state[actionPrefix] = false;
+      }
+    );
+});
 
-   export function getLoadingIndicator(actionName, pendingState) {
-     return pendingState[actionName]?.pending
-  }
-  
+function getActionPrefix(action) {
+  let arr = action.type.split("/");
+  let actionPrefix = arr[0] + "/" + arr[1];
+  return actionPrefix;
+}
+
+export function getLoadingIndicator(actionName, pendingState) {
+  return pendingState[actionName]?.pending;
+}
