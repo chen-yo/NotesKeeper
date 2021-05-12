@@ -1,6 +1,6 @@
-import { useSelector } from "react-redux"
+import { useSelector } from 'react-redux'
 
 export function useLoadingIndicator(actionName) {
-    const pendingState = useSelector(state=> state.pending)
+    const pendingState = useSelector((state) => state.pending)
     return pendingState[actionName]?.pending
-  }
+}

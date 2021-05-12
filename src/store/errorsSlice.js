@@ -26,8 +26,8 @@ export function handleErrors(error) {
 export const errorsSlice = createSlice({
     name: 'errors',
     initialState: {
-       error: {}, // validation
-       unhandled: null
+        error: {}, // validation
+        unhandled: null,
     },
     reducers: {
         setError: (state, action) => {
@@ -38,20 +38,20 @@ export const errorsSlice = createSlice({
         },
         clearErrors: (state) => {
             state.error = {}
-        }
-    }
+        },
+    },
 })
 
 export function handleErrors2(error) {
-  return (dispatch) => {
-    let errorJson = error?.response?.data;
-    // check if its validation error, if so dispatch error to handle by global error reducer
-    if (errorJson?.type === "validation") {
-      dispatch(errorsActions.setError(errorJson.errorFields));
-    } else {
-      dispatch(errorsActions.setUnhandled(error));
+    return (dispatch) => {
+        let errorJson = error?.response?.data
+        // check if its validation error, if so dispatch error to handle by global error reducer
+        if (errorJson?.type === 'validation') {
+            dispatch(errorsActions.setError(errorJson.errorFields))
+        } else {
+            dispatch(errorsActions.setUnhandled(error))
+        }
     }
-  };
 }
 
 export const errorsActions = errorsSlice.actions
