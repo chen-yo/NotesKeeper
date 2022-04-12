@@ -5,7 +5,6 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 # Ignore frontend folder
-frontend/
 ### STS ###
 .apt_generated
 .classpath

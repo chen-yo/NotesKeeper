@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+ 
+    <script>
+        (function() {
+
+           const createStore = rootReducer => {
+               let state;
+               let listeners = []
+               const getState = () => state;
+               const dispatch = action => {
+                   state = rootReducer(state, action)
+                   listeners.forEach(listener => listener(state))
+               }
+
+               const subscribe = listener => {
+                   listeners.push(listener)
+               }
+
+               dispatch({})
+
+               return { getState, dispatch, subscribe}
+           }
+        })()
+    </script>
+</head>
+<body>
+    <div>
+        <h1>Counter</h1>
+        <button>Incr</button>
+        <button>Decr</button>
+    </div>
+    
+</body>
+</html>
